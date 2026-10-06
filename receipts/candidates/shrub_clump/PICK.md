@@ -1,0 +1,4 @@
+# shrub_clump: picked A (lump clusters), 2,350 tris, verify ok, 1.65 x 1.17 x 1.45 m
+A won by eye: five gorse mounds each built as a pile of faceted icosahedron lumps around a dark core, which reads as the ref's clustered gorse heads; ~90 yellow octahedron flower dots raycast onto the lumps; six grass tufts of tapering bent blades (DoubleSide) with seed-head stalks; a dirt pad, four small grey stones and a few dry twigs. Under the 3,000 brief.
+B (one knobbly lathe dome per mound, 2,530) and C (spiky subdivided shells, 1,950) both read as smooth or crystalline blobs; the lumpy silhouette is what makes it gorse.
+Known weakness: grass blades are thin and sparse next to the ref; flowers are scattered rather than clustered in sprays; the dirt pad edge is a visible flat disc. Width 1.65 m including grass and pad (bush mass about 1.4 m).

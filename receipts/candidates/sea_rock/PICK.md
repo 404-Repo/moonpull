@@ -1,0 +1,6 @@
+# sea_rock: picked A (profiles), 2,906 tris, verify ok, 4.28 x 2.27 x 3.79 m
+A won by eye: every stratum is its own irregular plan outline extruded with a chunky soft bevel and stacked with small overhangs, so the three rocks read as rounded layered sandstone pillows like the ref. Main rock 2.2 m (4 strata, tide pool cut as a hole through the top stratum with a teal water disc and pebbles/shells in it), back rock 1.9 m, small front rock 1.15 m. Wet olive-grey foot stratum, then darker sand, then sandstone; barnacle clusters on the lowest 0.6 m, kelp drape patches 0.45 to 0.95 m, kelp fronds at the foot (dressing is raycast onto the rock).
+B (stepped lathes, 2,468) reads as stacked tyres: too round and regular. C (displaced rounded cubes with groove strata, 3,540) reads as boxes; the grooves are too faint to read as layers and it is over the prop budget.
+All three share the layout and the dressing pass; the difference is construction only.
+Known weakness: the weed band is patches, not the ref's hanging drapes; the pool water is an opaque flat disc (no shader); 6 materials (sand, dark sand, wet foot, kelp, barnacle, water; water is unnamed as the contract list has no water recipe).
+Sources: ../_scratch_c2/src/kit.js + sea_rock_common.js + sea_rock_{a,b,c}.js, built by ../_scratch_c2/build.sh.

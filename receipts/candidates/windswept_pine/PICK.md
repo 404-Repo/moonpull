@@ -1,0 +1,4 @@
+# windswept_pine: picked C (lobed shelves), 4,374 tris, verify ok, 5.63 x 5.95 x 4.24 m
+C won by eye: each needle pad is a lobed outline extruded thin with a bevel and drooped at the rim, two or three tiers per pad (dark under, light on top), which is the ref's layered flat-shelf read. Tapered-tube trunk with a strong S-lean toward +x, six pads (crown plus left, right, lower right, back, front so it reads from all sides), six tapered roots over a base of faceted grey rocks with dark moss caps. Under the 5,000 brief.
+A (pads as rings of flattened icosahedra, 3,372) reads as broccoli clumps, not flat shelves. B (lathe mushroom caps, 3,324) reads as smooth domes/umbrellas with no needle edge.
+Known weakness: pads are fairly regular (similar lobes, similar spacing); bark is a plain tube with no gnarl or twist; trunk base reads a little thin against the ref's root flare. 5 materials (bark timber, 2 needle, rock, moss).
