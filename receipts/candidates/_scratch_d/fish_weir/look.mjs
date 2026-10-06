@@ -1,0 +1,13 @@
+import puppeteer from 'puppeteer';
+import { createServer } from 'http'; import fs from 'fs'; import path from 'path';
+const ROOT = '/Users/atlas/astrocade-game4'; const SCR = path.dirname(new URL(import.meta.url).pathname);
+const srv = createServer((q, s) => { const p = decodeURIComponent(q.url.split('?')[0]); const f = p === '/look.html' ? path.join(SCR, 'look.html') : path.join(ROOT, p);
+  if (!fs.existsSync(f)) { s.writeHead(404); return s.end(); } s.writeHead(200, { 'content-type': f.endsWith('.html') ? 'text/html' : 'text/javascript' }); s.end(fs.readFileSync(f)); });
+await new Promise((r) => srv.listen(0, '127.0.0.1', r));
+const b = await puppeteer.launch({ headless: true, args: ['--use-angle=metal', '--no-sandbox'] });
+const pg = await b.newPage(); pg.on('pageerror', (e) => console.log('ERR', e.message));
+const list = process.argv[2]; const n = list.split(',').length;
+await pg.setViewport({ width: 1680, height: 380 * n });
+await pg.goto(`http://127.0.0.1:${srv.address().port}/look.html?a=${encodeURIComponent(list)}`);
+await pg.waitForFunction(() => document.title === 'DONE', { timeout: 60000 });
+await pg.screenshot({ path: process.argv[3] }); await b.close(); srv.close();

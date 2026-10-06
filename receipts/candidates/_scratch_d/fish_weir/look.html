@@ -1,0 +1,25 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js"}}</script>
+<style>body{margin:0;background:#222}</style></head><body>
+<script type="module">
+import * as THREE from 'three';
+const q = new URLSearchParams(location.search); const list = q.get('a').split(',');
+const W = 560, H = 380, cols = 3;
+const r = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+r.setSize(W * cols, H * list.length); r.setScissorTest(true); document.body.appendChild(r.domElement);
+r.outputColorSpace = THREE.SRGBColorSpace; r.toneMapping = THREE.ACESFilmicToneMapping;
+const scene = new THREE.Scene(); scene.background = new THREE.Color(0x9aa3ab);
+scene.add(new THREE.HemisphereLight(0xcfe3ff, 0x806040, 1.4));
+const sun = new THREE.DirectionalLight(0xfff0d8, 2.4); sun.position.set(3, 5, 4); scene.add(sun);
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(30, 30), new THREE.MeshStandardMaterial({ color: 0x8a7a62 }));
+ground.rotation.x = -Math.PI / 2; scene.add(ground);
+const C = (x, y, z, tx, ty, tz, fov = 35) => { const c = new THREE.PerspectiveCamera(fov, W / H, 0.05, 80); c.position.set(x, y, z); c.lookAt(tx, ty, tz); return c; };
+const cams = [C(-0.5, 1.5, 3.2, -1.8, 0.5, 0.3), C(2.5, 4.5, -4.5, 0, 0.3, 0.3, 40), C(4.6, 0.8, 2.0, 2.5, 0.5, 0.3)];
+for (let i = 0; i < list.length; i++) {
+  const mod = await import(list[i] + '?t=' + Date.now());
+  const obj = mod.default(THREE); scene.add(obj);
+  for (let k = 0; k < cols; k++) { const y = (list.length - 1 - i) * H; r.setViewport(k * W, y, W, H); r.setScissor(k * W, y, W, H); r.render(scene, cams[k]); }
+  scene.remove(obj);
+}
+document.title = 'DONE';
+</script></body></html>
