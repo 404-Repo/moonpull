@@ -13,7 +13,7 @@ import { FollowCam } from './camera.js';
 import { Story } from './story.js';
 import { initAudio, sfx } from './audio.js';
 import { buildHarbour, HARBOUR } from './harbour.js';
-import { buildFlats } from './flats.js';
+import { buildFlats, FLATS } from './flats.js';
 import { buildScenery } from './scenery.js';
 
 const $ = (id) => document.getElementById(id);
@@ -185,7 +185,7 @@ function frame() {
   G.fps = Math.round(fpsT); G.speed = +player.speed.toFixed(2); G.score = story.count;
   G.draws = renderer.info.render.calls; G.tris = renderer.info.render.triangles;
   G.tide = +tide.level.toFixed(2); G.step = story.i; G.objective = story.current ? story.current.text : 'done';
-  G.depth = +player.depth.toFixed(2); G.heading = +player.yaw.toFixed(2); G.camYaw = +cam.yaw.toFixed(3); G.talking = hud.talking; G.use = (world.nearestUse(player.pos.x, player.pos.z) || {}).label || null; G.y = +player.pos.y.toFixed(2);
+  G.depth = +player.depth.toFixed(2); G.heading = +player.yaw.toFixed(2); G.camYaw = +cam.yaw.toFixed(3); G.mv = [+input.move.x.toFixed(2), +input.move.y.toFixed(2)]; G.vel = [+player.vel.x.toFixed(2), +player.vel.z.toFixed(2)]; G.talking = hud.talking; G.use = (world.nearestUse(player.pos.x, player.pos.z) || {}).label || null; G.y = +player.pos.y.toFixed(2);
 }
 
 progress(1, 'ready');
@@ -195,4 +195,4 @@ if (Q.has('autostart')) start();
 window.__READY__ = true;
 requestAnimationFrame(frame);
 // dev hooks for my own testing only (never used by a gate)
-window.__DEV__ = { tide, player, story, world, cam, THREE, scene, rig };
+window.__DEV__ = { tide, player, story, world, cam, THREE, scene, rig, FLATS };

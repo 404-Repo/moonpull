@@ -28,7 +28,8 @@ async function sendTouch(type) {
 }
 async function down(id, x, y) { touches.set(id, { x, y }); await sendTouch('touchStart'); }
 async function move(id, x, y) { touches.set(id, { x, y }); await sendTouch('touchMove'); }
-async function up(id) { touches.delete(id); await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [...touches.entries()].map(([i, p]) => ({ x: p.x, y: p.y, id: i })) }); }
+// CDP: points missing from a touchMove are released; touchEnd must carry no points
+async function up(id) { touches.delete(id); await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] }); if (touches.size) await sendTouch('touchStart'); }
 const box = (sel) => page.$eval(sel, (e) => { const r = e.getBoundingClientRect(); return { x: r.x, y: r.y, w: r.width, h: r.height, cx: r.x + r.width / 2, cy: r.y + r.height / 2, vis: e.offsetParent !== null && r.width > 0 }; });
 const G = () => page.evaluate(() => window.__GAME__);
 let shot = 0, t0 = Date.now();
@@ -56,6 +57,7 @@ async function walk(tx, tz, { r = 1.5, run = true, timeout = 60000, during, snap
   while (Date.now() < end) {
     const g = await G();
     const dx = tx - g.pos[0], dz = tz - g.pos[1], d = Math.hypot(dx, dz);
+    if (process.env.TRACE) console.log('   t', g.pos, g.y, g.tide, g.depth);
     if (d < r) { ok = true; break; }
     const y = g.camYaw, fx = -Math.sin(y), fz = -Math.cos(y), rx = Math.cos(y), rz = -Math.sin(y);
     const my = (dx * fx + dz * fz) / d, mx = (dx * rx + dz * rz) / d;
@@ -75,7 +77,7 @@ async function walk(tx, tz, { r = 1.5, run = true, timeout = 60000, during, snap
 async function tap(x, y) { await down(3, x, y); await sleep(60); await up(3); }
 async function use() { const b = await box('#act'); if (!b.vis) { await log('no use button'); return false; } await tap(b.cx, b.cy); await sleep(400); return true; }
 async function talkThrough() { for (let i = 0; i < 12; i++) { const g = await G(); if (!g.talking) break; const b = await box('#say'); await snap('talk'); await tap(b.cx, b.cy); await sleep(500); } }
-async function waitTide(pred, ms = 15000) { const e = Date.now() + ms; while (Date.now() < e) { const g = await G(); if (pred(g.tide)) return true; await sleep(150); } return false; }
+async function waitTide(pred, ms = 15000) { const e = Date.now() + ms; while (Date.now() < e) { const g = await G(); if (process.env.TRACE) console.log("   w", g.pos, g.y, g.tide, g.mv, g.vel); if (pred(g.tide)) return true; await sleep(150); } return false; }
 const expectStep = async (n, what) => { const g = await G(); const ok = g.step >= n; console.log(ok ? `  PASS ${what}` : `  FAIL ${what} (step ${g.step}, wanted ${n})`); results.push([what, ok]); return ok; };
 const results = [];
 
@@ -113,6 +115,23 @@ if (ROUTE === 'harbour' || ROUTE === 'all') {
   await walk(-30, 4, { r: 3, snapEvery: 3000, name: 'bar', during: async () => dial(-1) });
   await dialOff();
   await expectStep(8, 'crossed the sand bar east');
+}
+if (ROUTE === 'flats' || ROUTE === 'all') {
+  const F = await page.evaluate(() => ({ stern: __DEV__.FLATS.stern, raft: __DEV__.FLATS.raft, wreck: __DEV__.FLATS.wreck }));
+  await log('flats begin ' + JSON.stringify(F));
+  await dial(-1); await waitTide((t) => t < -2.0, 15000);
+  await walk(F.wreck.x - 11, F.wreck.z + 5, { r: 2, snapEvery: 2500, name: 'flats', during: async () => dial(-1) });
+  await expectStep(9, 'found the wreck');
+  await walk(F.raft.x, F.raft.z, { r: 0.7, run: false, snapEvery: 2500, name: 'toraft', during: async () => dial(-1) });
+  await dial(1); await waitTide((t) => t > 2.2, 15000); await snap('raftup');
+  await walk(F.stern.x, F.stern.z, { r: 0.8, run: false, during: async () => dial(1) });
+  await expectStep(10, 'rode the raft up to the cabin');
+  await use(); await snap('lens');
+  await expectStep(11, 'took the lens');
+  await dial(-1); await waitTide((t) => t < -2.0, 15000);
+  await walk(103, -4, { r: 2.5, snapEvery: 3000, name: 'east2', during: async () => dial(-1) });
+  await dialOff();
+  await expectStep(12, 'carried the lens to Gull Head');
 }
 await log('end'); await snap('end');
 const g = await G();

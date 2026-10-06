@@ -16,7 +16,7 @@ export async function buildFlats(ctx) {
   const F = FLATS;
   const loc = (lx, lz) => { const c = Math.cos(F.wreck.rot), s = Math.sin(F.wreck.rot); return { x: F.wreck.x + lx * c + lz * s, z: F.wreck.z - lx * s + lz * c }; };
   F.stern = loc(-0.748, -9.937);
-  F.raft = loc(-4.6, -9.6);   // beside the hull, under the cabin door side
+  F.raft = loc(-3.25, -9.8);   // beside the hull, under the cabin door side
 
   // dressing: kelp rocks scattered on the bed, thicker toward the wreck
   let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
@@ -31,11 +31,11 @@ export async function buildFlats(ctx) {
 
   // the wreck: solid hull, a stern you can only reach from a raft at high water
   const wr = await put('wreck_hull', F.wreck.x, F.wreck.z, { rot: F.wreck.rot });
-  world.solid({ x: F.wreck.x, z: F.wreck.z, hw: 3.2, hd: 11, rot: F.wreck.rot, y1: 6 });
+  { const c = loc(0, 2); world.solid({ x: c.x, z: c.z, hw: 3.2, hd: 8.6, rot: F.wreck.rot, y1: 6 }); }
   // the stern cabin floor: a platform up at +2.2
   const cabinTop = world.terrain(F.wreck.x, F.wreck.z) + 4.1;
   world.plat({ x: F.stern.x, z: F.stern.z, hw: 1.6, hd: 1.6, rot: F.wreck.rot, top: cabinTop });
-  world.solid({ x: F.stern.x, z: F.stern.z, hw: 1.7, hd: 1.7, rot: F.wreck.rot, y1: cabinTop });
+  world.solid({ x: F.stern.x, z: F.stern.z, hw: 1.0, hd: 1.4, rot: F.wreck.rot, y1: cabinTop });
 
   // the hatch-cover raft, tied to the hull so the sea can only lift it, not take it
   const raftO = await put('raft', F.raft.x, F.raft.z, { rot: F.wreck.rot, raw: true });
