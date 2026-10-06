@@ -14,6 +14,7 @@ import { Story } from './story.js';
 import { initAudio, sfx } from './audio.js';
 import { buildHarbour, HARBOUR } from './harbour.js';
 import { buildFlats } from './flats.js';
+import { buildScenery } from './scenery.js';
 
 const $ = (id) => document.getElementById(id);
 const Q = new URLSearchParams(location.search);
@@ -26,7 +27,7 @@ const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPrefere
 renderer.setSize(innerWidth, innerHeight, false);
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(42, innerWidth / innerHeight, 0.3, 900);
-const rig = createRig(THREE, renderer, scene, { hour: 16.9, azimuth: 292, camera, fogStart: 60, fogDensity: 0.0016, tier: Q.get('q') || 'auto' });
+const rig = createRig(THREE, renderer, scene, { hour: 17.25, azimuth: 288, camera, fogStart: 70, fogDensity: 0.0011, tier: Q.get('q') || 'auto' });
 
 // --- the coast ---------------------------------------------------------------------------
 progress(0.05, 'raising the coast');
@@ -94,6 +95,7 @@ progress(0.35, 'building Gullwick');
 await buildHarbour(ctx);
 progress(0.6, 'draining the flats');
 await buildFlats(ctx);
+await buildScenery(ctx);
 progress(0.9, 'the tide is turning');
 // static scenery merged by material: one bake per area keeps culling useful
 {

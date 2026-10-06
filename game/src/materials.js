@@ -56,8 +56,15 @@ export function groundMaterial() {
           vec3 wetSand = mix(vec3(0.42, 0.36, 0.28), vec3(0.50, 0.43, 0.33), rip * 0.6 + n3 * 0.3);
           vec3 grass = mix(vec3(0.30, 0.40, 0.17), vec3(0.50, 0.53, 0.24), n1) * (0.82 + 0.3 * n2);
           grass = mix(grass, vec3(0.62, 0.56, 0.34), smoothstep(0.55, 0.8, n2) * 0.5);   // dry tufts
-          vec3 rock = mix(vec3(0.52, 0.47, 0.42), vec3(0.74, 0.65, 0.53), n1);
-          rock *= 0.78 + 0.22 * vn(vec2((p.x + p.y) * 0.35, y * 1.6)) + 0.18 * vn(vec2((p.x - p.y) * 1.3, y * 5.0)) - 0.12 * smoothstep(0.6, 0.9, vn(vec2(p.x * 2.1 + p.y, y * 0.9)));
+          vec3 rock = mix(vec3(0.44, 0.38, 0.33), vec3(0.66, 0.56, 0.44), n1);
+          vec3 an = abs(gn); vec3 tw = an / (an.x + an.y + an.z);
+          vec3 wp = vWPos;
+          float tri = fb(vec2(wp.z, wp.y * 2.4) * 0.3) * tw.x + fb(wp.xz * 0.3) * tw.y + fb(vec2(wp.x, wp.y * 2.4) * 0.3) * tw.z;
+          float trf = vn(vec2(wp.z, wp.y * 3.0) * 1.6) * tw.x + vn(wp.xz * 1.6) * tw.y + vn(vec2(wp.x, wp.y * 3.0) * 1.6) * tw.z;
+          float band = smoothstep(0.35, 0.9, sin(wp.y * (1.4 + 0.8 * vn(wp.xz * 0.05)) + tri * 7.0 + vn(wp.xz * 0.12) * 4.0) * 0.5 + 0.5);
+          rock *= 0.72 + 0.32 * tri + 0.14 * trf;
+          rock = mix(rock, rock * vec3(0.74, 0.66, 0.6), band * 0.55);
+          rock = mix(rock, vec3(0.36, 0.40, 0.22), smoothstep(0.6, 0.85, tri) * smoothstep(0.75, 0.95, gn.y + 0.35) * 0.6);
           vec3 weed = mix(vec3(0.25, 0.29, 0.13), vec3(0.33, 0.33, 0.16), n2);
           vec3 c = sand;
           c = mix(c, grass, smoothstep(2.4, 3.6, y + n1 * 1.5) * (1.0 - smoothstep(0.35, 0.6, slope)));

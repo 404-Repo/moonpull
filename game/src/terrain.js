@@ -5,7 +5,7 @@
 // the open sea is toward -Z. Heights are metres above the sea's REST level (y = 0).
 import * as THREE from 'three';
 
-export const WORLD = { x0: -290, x1: 290, z0: -210, z1: 150, step: 1.25 };
+export const WORLD = { x0: -340, x1: 340, z0: -230, z1: 150, step: 1.25 };
 
 const sstep = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
 const lerp = (a, b, t) => a + (b - a) * t;
@@ -97,10 +97,19 @@ disc(124, -26, 6, -1.0, 4);
 // THE STACK. Stepping stones to the sea stack, the stack itself, the tidal basin arena.
 for (let i = 0; i < 7; i++) disc(196 + i * 3.2, -6 - i * 6.2, 1.8, -1.2 + (i % 2) * 0.3, 1.2);
 disc(220, -60, 13, 3.0, 6);                                    // basin floor around the stack foot
-disc(220, -72, 7, 26, 3);                                      // the stack
+FEATURES.push({ k: 'stack', x: 220, z: -72, r: 7.5, h: 27 });          // the stack
 disc(218, -50, 18, -0.6, 8, 'raise');                          // the arena sand at low tide
 
 function applyFeature(f, x, z, h) {
+  if (f.k === 'stack') {
+    const dx = x - f.x, dz = z - f.z, a = Math.atan2(dz, dx), d = Math.hypot(dx, dz);
+    const rr = f.r * (1 + 0.16 * Math.sin(a * 3 + 1) + 0.09 * Math.sin(a * 7)) ;
+    const k = 1 - sstep(rr - 1.0, rr + 7, d);           // 1 inside, falling off over the skirt
+    if (k <= 0) return h;
+    const ledges = Math.floor(k * 5) / 5 * 0.35 + k * 0.65; // stepped flanks
+    const top = f.h * Math.pow(Math.max(0, ledges), 0.55) + fbm(x * 0.3, z * 0.3, 2) * 1.2 * k;
+    return Math.max(h, lerp(h, top, Math.min(1, k * 3)));
+  }
   if (f.k === 'mound') { const r2 = ((x - f.x) ** 2 + (z - f.z) ** 2) / (f.r * f.r); return h + f.h * Math.exp(-r2 * 2.2); }
   let dist, top;
   if (f.k === 'disc') { dist = Math.hypot(x - f.x, z - f.z) - f.r; top = f.h; }
