@@ -31,6 +31,7 @@ function tone(freq, t0, dur, type = 'sine', vol = 0.18) {
 
 let gullT = 3;
 export const sfx = {
+  mute(on) { if (master) master.gain.value = on ? 0 : 0.8; },
   chime() { if (!ctx) return; const t = ctx.currentTime; [784, 988, 1319].forEach((f, i) => tone(f, t + i * 0.09, 1.6, 'sine', 0.12)); },
   shard() { if (!ctx) return; const t = ctx.currentTime; [523, 659, 784, 1047, 1319, 1568].forEach((f, i) => tone(f, t + i * 0.11, 2.4, 'triangle', 0.09)); },
   splash() { if (!ctx) return; const t = ctx.currentTime; tone(140, t, 0.6, 'sine', 0.2); },

@@ -20,6 +20,7 @@ import { buildGullHead } from './gullhead.js';
 import { buildStack } from './stack.js';
 import { makeFinale } from './finale.js';
 import { buildErrands } from './errands.js';
+import { initZones } from './zones.js';
 
 const $ = (id) => document.getElementById(id);
 const Q = new URLSearchParams(location.search);
@@ -144,6 +145,19 @@ function resize() {
 addEventListener('resize', resize);
 
 initInput(canvas);
+const zones = initZones(player);
+// title slideshow: the coast, then the night the light went out
+{
+  const caps = ['', 'The night the lamp on the Stack went out, the moon slipped, and the sea stopped.', 'In the morning the tide had forgotten its way. Boats sat in the mud. Houses stood in the water.', 'Old Nell kept one thing from the keeper: a lantern with a little of the moon\'s pull still in it.'];
+  const sl = [...document.querySelectorAll('#slides .sl')], cap = $('slidecap'); let k = 0;
+  const step = () => { if (playing) return; sl[k].classList.remove('on'); k = (k + 1) % sl.length; sl[k].classList.add('on'); cap.classList.toggle('on', !!caps[k]); if (caps[k]) cap.textContent = caps[k]; setTimeout(step, k === 0 ? 5000 : 6500); };
+  setTimeout(step, 4500);
+}
+// pause
+let paused = false;
+$('pause').addEventListener('click', () => { paused = true; $('pausem').classList.add('on'); });
+$('resume').addEventListener('click', () => { paused = false; $('pausem').classList.remove('on'); });
+$('mute').addEventListener('click', () => { const m = $('mute'); const on = m.textContent === 'Sound on'; m.textContent = on ? 'Sound off' : 'Sound on'; music.vol = on ? 0 : 0.42; sfx.mute && sfx.mute(on); });
 
 // --- start ---------------------------------------------------------------------------------
 let playing = false;
@@ -172,7 +186,8 @@ function frame() {
   fpsAcc += raw; fpsN++; if (fpsAcc > 0.5) { fpsT = fpsN / fpsAcc; fpsAcc = 0; fpsN = 0; }
   t += dt;
   pollKeys();
-  if (playing) {
+  if (playing && !paused) {
+    zones(dt);
     if (input.act) { input.act = false; const u = world.nearestUse(player.pos.x, player.pos.z); if (u && !u.busy) u.use(); else if (hud.talking) sayAdvance(); }
     updateTide(dt, input);
     seaMoved += Math.abs(tide.level - lastLevel); lastLevel = tide.level;

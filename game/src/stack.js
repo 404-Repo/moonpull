@@ -17,6 +17,12 @@ export async function buildStack(ctx) {
   const T = world.terrain;
   const S = STACK;
 
+  // the keeper's stair into the rock, and lamps either side of the door
+  const st = await ctx.put('cliff_stairs', S.door.x, S.door.z - 4.5, { rot: 0, raw: true });
+  if (st) st.position.y = T(S.door.x, S.door.z) - 0.2;
+  for (const dx of [-2.2, 2.2]) await ctx.put('lamp_post', S.door.x + dx, S.door.z + 0.5, { rot: Math.PI });
+  await ctx.put('anchor', S.ledge.x - 6, S.ledge.z + 2, { rot: 2.2 });
+  await ctx.put('net_rack', S.ledge.x + 6, S.ledge.z - 1, { rot: -0.6 });
   // --- the Undertow ---------------------------------------------------------------------------
   const B = { hp: 3, phase: 0, state: 'asleep', x: S.lair.x, z: S.lair.z, yaw: Math.PI, t: 0, strandT: 0, exposedT: 0,
     rise0: 0, riseT: 0, attackT: 0, active: false, y: -12, lives: 3, shellAway: 0 };
