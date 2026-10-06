@@ -33,10 +33,13 @@ const canvas = $('c');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
 renderer.setSize(innerWidth, innerHeight, false);
 const scene = new THREE.Scene();
+// the rig's phone tier renders at 1x, which a 3x phone upscales into mush right under the hero;
+// 2x keeps the foreground sharp (draw calls are unchanged, fill rate doubles)
 const camera = new THREE.PerspectiveCamera(42, innerWidth / innerHeight, 0.3, 900);
 const rig = createRig(THREE, renderer, scene, { hour: 17.65, azimuth: 288, camera, fogStart: 70, fogDensity: 0.0011, tier: Q.get('q') || 'auto' });
 
 // --- the coast ---------------------------------------------------------------------------
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, Q.get('pr') ? +Q.get('pr') : 2));
 progress(0.05, 'raising the coast');
 const grid = buildGrid();
 const terrainH = makeSampler(grid);
@@ -105,7 +108,7 @@ heroModel.traverse((o) => {
 const player = new Player(heroModel, world);
 scene.add(player.root);
 // the lantern's own light
-const lanternLight = new THREE.PointLight(0x9fd8ff, 2.2, 6, 2);
+const lanternLight = new THREE.PointLight(0x9fd8ff, 1.0, 4, 2);
 scene.add(lanternLight);
 
 const story = new Story(world);
@@ -214,7 +217,7 @@ function frame() {
     if (j.head) { const want = d < 7 ? Math.atan2(player.pos.x - p.x, player.pos.z - p.z) - p.root.rotation.y : 0; const a = Math.atan2(Math.sin(want), Math.cos(want)); j.head.rotation.y += (THREE.MathUtils.clamp(a, -0.9, 0.9) - j.head.rotation.y) * Math.min(1, dt * 3); }
   }
   lanternLight.position.set(player.pos.x + Math.sin(player.yaw) * 0.25, player.pos.y + 0.9, player.pos.z + Math.cos(player.yaw) * 0.25);
-  lanternLight.intensity = tide.locked ? 0 : 1.6 + Math.min(2.5, Math.abs(tide.speed) * 3);
+  lanternLight.intensity = tide.locked ? 0 : 0.7 + Math.min(1.2, Math.abs(tide.speed) * 1.5);
   SEA.uSea.value = tide.level; SEA.uWet.value = tide.wet; SEA.uTime.value = t;
   sea.position.y = tide.level;
   if (ctx.boss && ctx.boss.active) { cam.aim = cam.aim || new THREE.Vector3(); cam.aim.set(ctx.boss.x, 0, ctx.boss.z); cam.extraArm = 1.0; cam.extraPitch = -0.25; }

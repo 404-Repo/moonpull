@@ -66,13 +66,13 @@ export async function dressHarbour(ctx) {
 export async function dressFlats(ctx) {
   const { put, world } = ctx;
   let seed = 23; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
-  for (const [x, z, r] of [[8, -22, 0.4], [18, -30, 0.9], [-6, -40, -0.3], [72, -30, 1.4], [82, -38, 1.9], [28, -72, 0.1], [40, -76, -0.2]]) {
-    await put('fish_weir', x, z, { rot: r });
+  for (const [x, z, r] of [[-4, -44, 0.4], [26, -14, 0.9], [-6, -58, -0.3], [72, -30, 1.4], [82, -38, 1.9], [28, -72, 0.1], [40, -76, -0.2]]) {
+    { await put('fish_weir', x, z, { rot: r }); world.solid({ x, z, hw: 4.8, hd: 0.5, rot: r }); }
   }
   await put('anchor', 36, -50, { rot: 0.8 }); world.solid({ x: 36, z: -50, r: 1.2 });
   // something every dozen metres along the two walks across the flats, off to either side
   const legs = [[[-30, 4], [40, -40]], [[52, -50], [100, -6]]];
-  const kinds = ['sea_stack_rocks', 'kelp_clump', 'fish_weir', 'kelp_clump', 'rowboat', 'sea_stack_rocks', 'kelp_clump', 'buoy'];
+  const kinds = ['sea_stack_rocks', 'kelp_clump', 'kelp_clump', 'kelp_clump', 'rowboat', 'sea_stack_rocks', 'kelp_clump', 'buoy'];
   let k = 0;
   for (const [[ax, az], [bx, bz]] of legs) {
     const L = Math.hypot(bx - ax, bz - az), nx = -(bz - az) / L, nz = (bx - ax) / L;
@@ -117,7 +117,7 @@ export async function wreckDebris(ctx) {
     if (o) { o.position.y = world.terrain(x, z) - 0.18 - rnd() * 0.2; o.rotation.x = (rnd() - 0.5) * 0.7; o.rotation.z = (rnd() - 0.5) * 0.7; }
   }
   // more weirs in arcs, the way old flats are scored with them
-  for (const [x, z, r] of [[-22, -16, 0.2], [52, -20, 1.2], [94, -30, 1.7], [60, -84, -0.4], [-2, -78, 0.5], [12, -52, 2.4]]) await put('fish_weir', x, z, { rot: r });
+  for (const [x, z, r] of [[-22, -16, 0.2], [52, -20, 1.2], [94, -30, 1.7], [60, -84, -0.4], [-2, -78, 0.5], [12, -52, 2.4]]) { await put('fish_weir', x, z, { rot: r }); world.solid({ x, z, hw: 4.8, hd: 0.5, rot: r }); }
   // beached rowboats that float when the sea comes back
   for (const [x, z, r] of [[24, -36, 0.8], [74, -58, 2.2], [-12, -44, 1.9], [88, -20, 0.4]]) {
     const o = await put('rowboat', x, z, { raw: true, rot: r });
