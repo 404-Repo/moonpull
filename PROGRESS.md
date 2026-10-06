@@ -50,7 +50,7 @@ Serving at **:8796** (`game/`, static server, always the working tree). Gullwick
 
 Caveats on those numbers: 8 pairs is coarse; round 1's podium frames included several of the research bot's camera-in-a-wall frames (unfair to them), so round 2 used their best frames; aspect ratios differ (they are portrait captures from a different harness); the critic correctly guessed which game was constant. The round 2 losses are decisive and come from art direction (SUNDRIFT's grade and branded HUD, Bellkeeper's dense built square), which is the honest gap.
 
-Also done: Bellkeeper camera with pitch-then-yaw-swing collision (critic 1 had flagged our camera inside geometry at the wreck); dialogue as non-blocking captions; the dark lighthouse on a shaped sea stack is visible from the harbour as the goal; 46 assets through the 404 loop; harbour music (Atlas, MiniMax Music) plays with gaps because the service returned 21 s for a 75 s request.
+Also done: Bellkeeper camera with pitch-then-yaw-swing collision (critic 1 had flagged our camera inside geometry at the wreck); dialogue as non-blocking captions; the dark lighthouse on a shaped sea stack is visible from the harbour as the goal; 38 assets through the 404 loop at that point (I first wrote 46 here; corrected at milestone 3 from index.json); harbour music (Atlas, MiniMax Music) plays with gaps because the service returned 21 s for a 75 s request.
 
 Not done or weak: the hero reads as a faceless mannequin from behind (critic 2's second property); the critic has not yet seen the Needle Run; the Stack, the boss and the ending are not built; music for the other places is generating; no jam.mjs run yet.
 
@@ -64,7 +64,7 @@ The whole game exists and plays from title to end card. Serving at **:8796**.
 - Errands in any order, alongside the road: Marta's three pots (deep low tide off the jetty), Pip's toy boat (only a high sea carries it home, a low one sets it down), Bram's spade (by the far weir). 10 more steps, 5 lost things counted on the end card. Total tracked steps 32 (Bellkeeper's measured tally is about 35, inferred).
 - People: Nell, Tam, Marta, Pip, Bram, the Undertow. Title slideshow with three painted prologue cards (Atlas images), pause menu with sound toggle, zone banners.
 - Music: four cues (harbour, flats, boss, finale) from Atlas MiniMax Music, 21 to 45 s each, played with gaps; synthesised surf, gulls and swell.
-- 56 3D assets through the 404 loop; hero v2 (pointed hood, red scarf, bigger pack) after critic 2, plus a warm rim light on the hero only after critic 3.
+- 44 3D assets through the 404 loop (counted from game/assets/index.json); hero v2 (pointed hood, red scarf, bigger pack) after critic 2, plus a warm rim light on the hero only after critic 3.
 
 **Measured (my real multi-touch gate, tools/play.mjs)**
 - Main chain end to end in one run: 20 of 20 gate assertions (every main step plus the end card), 0 console errors, peak ~150-220 draws, 0.1-0.75 M triangles, 390x844 portrait. Bot time 257 s; the bot knows every answer, so a first human play is longer, unmeasured.
