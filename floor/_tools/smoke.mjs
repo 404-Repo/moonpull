@@ -1,0 +1,15 @@
+import puppeteer from 'puppeteer';
+const b = await puppeteer.launch({ headless: 'new', args: ['--enable-gpu', '--ignore-gpu-blocklist'] });
+const p = await b.newPage();
+await p.setViewport({ width: 844, height: 390, isMobile: true, hasTouch: true, deviceScaleFactor: 2 });
+p.on('console', m => console.log('console', m.type(), m.text()));
+p.on('pageerror', e => console.log('PAGEERR', e.message));
+await p.goto('http://localhost:8797/', { waitUntil: 'networkidle0' });
+await p.waitForFunction('window.__READY__', { timeout: 30000 });
+await p.tap('#startb');
+await new Promise(r => setTimeout(r, 2500));
+console.log(await p.evaluate(() => JSON.stringify(window.__GAME__)));
+await p.screenshot({ path: '/tmp/claude-smoke.jpg', type: 'jpeg', quality: 80 });
+const info = await p.evaluate(() => { const c = document.createElement('canvas').getContext('webgl2'); const d = c.getExtension('WEBGL_debug_renderer_info'); return c.getParameter(d.UNMASKED_RENDERER_WEBGL); });
+console.log(info);
+await b.close();

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Moonpull</title>
+<style>
+  html,body{margin:0;height:100%;overflow:hidden;background:#1b2340;touch-action:none;-webkit-user-select:none;user-select:none;font-family:Georgia,'Times New Roman',serif;color:#fff}
+  canvas{display:block;position:fixed;inset:0}
+  #hud{position:fixed;inset:0;pointer-events:none}
+  #obj{position:absolute;left:max(12px,env(safe-area-inset-left));top:10px;max-width:46vw;background:rgba(20,28,60,.55);border:1px solid rgba(220,230,255,.35);border-radius:10px;padding:7px 11px;font-size:14px;line-height:1.3;backdrop-filter:blur(4px)}
+  #obj b{display:block;font-size:10px;letter-spacing:.18em;color:#cfe0ff;font-family:system-ui,sans-serif;font-weight:600}
+  #score{position:absolute;right:max(14px,env(safe-area-inset-right));top:10px;font-family:system-ui,sans-serif;font-size:13px;background:rgba(20,28,60,.55);border-radius:10px;padding:6px 10px}
+  #say{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);width:min(58vw,520px);background:rgba(250,244,230,.93);color:#2a2230;border-radius:12px;padding:9px 14px;font-size:14px;line-height:1.35;opacity:0;transition:opacity .3s;box-shadow:0 4px 18px rgba(0,0,0,.3)}
+  #say.on{opacity:1}
+  #say i{font-style:normal;font-weight:bold;color:#7a3b52;margin-right:6px}
+  #toast{position:absolute;left:50%;top:22%;transform:translateX(-50%);font-family:system-ui,sans-serif;font-size:14px;background:rgba(120,30,40,.7);padding:6px 12px;border-radius:8px;opacity:0;transition:opacity .3s}
+  #toast.on{opacity:1}
+  #gauge{position:absolute;right:max(18px,env(safe-area-inset-right));top:56px;bottom:70px;width:22px;border-radius:12px;background:linear-gradient(#2c4f8a,#5b8fc4 60%,#d8c49a);border:1px solid rgba(255,255,255,.5)}
+  #gauge .lvl{position:absolute;left:-7px;right:-7px;height:4px;background:#fff;border-radius:3px;box-shadow:0 0 8px #bfe0ff}
+  #gauge .t{position:absolute;right:28px;font-family:system-ui,sans-serif;font-size:10px;letter-spacing:.1em;color:#dfe8ff;white-space:nowrap}
+  #hint{position:absolute;right:52px;bottom:16px;font-family:system-ui,sans-serif;font-size:11px;color:rgba(255,255,255,.75);text-align:right}
+  #stick{position:fixed;left:40px;bottom:34px;width:118px;height:118px;border-radius:50%;background:rgba(255,255,255,.14);border:2px solid rgba(255,255,255,.45);pointer-events:auto;z-index:5;display:none}
+  #knob{position:absolute;left:50%;top:50%;width:52px;height:52px;margin:-26px 0 0 -26px;border-radius:50%;background:rgba(255,255,255,.7);box-shadow:0 2px 10px rgba(0,0,0,.3)}
+  #start{position:fixed;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(ellipse at 70% 30%,rgba(255,240,210,.25),rgba(15,22,50,.82) 70%);text-align:center;padding:16px}
+  #start h1{margin:0;font-size:44px;letter-spacing:.22em;font-weight:normal;text-shadow:0 0 22px #bcd8ff}
+  #start p{max-width:520px;font-size:14px;line-height:1.45;color:#e8ecff;margin:10px 0 18px}
+  #startb{font:inherit;font-size:18px;letter-spacing:.15em;padding:12px 34px;border-radius:30px;border:1px solid #fff;background:rgba(255,255,255,.15);color:#fff;pointer-events:auto}
+  #end{position:fixed;inset:0;z-index:9;display:none;align-items:center;justify-content:center;flex-direction:column;background:rgba(15,22,50,.55);text-align:center}
+  #end h2{font-weight:normal;letter-spacing:.2em;font-size:30px;margin:0 0 8px}
+</style>
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}
+</script>
+</head>
+<body>
+<div id="hud">
+  <div id="obj"><b>OBJECTIVE</b><span id="objt">Loading...</span></div>
+  <div id="score">Pearls 0 · Score 0</div>
+  <div id="gauge"><span class="t" style="top:-2px">HIGH</span><span class="t" style="bottom:-2px">LOW</span><div class="lvl" id="lvl"></div></div>
+  <div id="hint">drag right side up/down<br>to pull the sea</div>
+  <div id="say"></div>
+  <div id="toast"></div>
+</div>
+<div id="stick"><div id="knob"></div></div>
+<div id="start">
+  <h1>MOONPULL</h1>
+  <p>Mira's lantern holds the moon's pull. Drag the right side of the screen to raise or lower the whole sea. Walk with the left thumb.</p>
+  <button id="startb">BEGIN</button>
+</div>
+<div id="end"><h2>THE LAMP IS LIT</h2><div id="endt"></div></div>
+<script type="module" src="./game.js"></script>
+</body>
+</html>
