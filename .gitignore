@@ -1,0 +1,5 @@
+node_modules
+research/winners/src/
+_jam/
+_verify/
+*.png.tmp
