@@ -46,7 +46,7 @@ Serving at **:8796** (`game/`, static server, always the working tree). Gullwick
 | round | vs podium frames (Bellkeeper, Farseek, SUNDRIFT) | vs floor | property named first | what I changed |
 |---|---|---|---|---|
 | 1 | 5 of 8 (losses: 1 slight, 1 clear, 1 decisive) | 5 of 6 | empty ground: flat sand and lawn planes | flats dressed (fish weirs, anchor, buoys that float, kelp, rocks every ~11 m along both walks), gulls, near-field ground detail in the shader |
-| 2 | 5 of 8 (losses: 3 decisive, to SUNDRIFT twice and Bellkeeper's wide square) | 6 of 6 | colour grade and main light: commit to a lower, warmer sun | sun to 17:65 hours (lower, warmer, longer shadows), 90 gorse candidates on the benches |
+| 2 | 5 of 8 (losses: 3 decisive, to SUNDRIFT twice and Bellkeeper's wide square) | 6 of 6 | colour grade and main light: commit to a lower, warmer sun | sun to hour 17.65, about 17:39 (lower, warmer, longer shadows), 90 gorse candidates on the benches |
 
 Caveats on those numbers: 8 pairs is coarse; round 1's podium frames included several of the research bot's camera-in-a-wall frames (unfair to them), so round 2 used their best frames; aspect ratios differ (they are portrait captures from a different harness); the critic correctly guessed which game was constant. The round 2 losses are decisive and come from art direction (SUNDRIFT's grade and branded HUD, Bellkeeper's dense built square), which is the honest gap.
 
