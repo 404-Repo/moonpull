@@ -145,7 +145,7 @@ export async function buildStack(ctx) {
       ctx.story.bossHit && ctx.story.bossHit();
     } });
   // usable radius follows the crab
-  world.tick(() => { const u = world.uses.find((u) => u.id === 'shine'); if (u) { u.x = B.x; u.z = B.z; u.r = shineReady ? 30 : 0; } });
+  world.tick(() => { const u = world.uses.find((u) => u.id === 'shine'); if (u) { u.x = B.x; u.z = B.z; u.r = shineReady ? 40 : 0; } });
 
   // --- the story of this place ----------------------------------------------------------------
   const St = ctx.story, P = 'The Stack';

@@ -34,7 +34,7 @@ async function up(id) { touches.delete(id); await cdp.send('Input.dispatchTouchE
 const box = (sel) => page.$eval(sel, (e) => { const r = e.getBoundingClientRect(); return { x: r.x, y: r.y, w: r.width, h: r.height, cx: r.x + r.width / 2, cy: r.y + r.height / 2, vis: e.offsetParent !== null && r.width > 0 }; });
 const G = () => page.evaluate(() => window.__GAME__);
 let shot = 0, t0 = Date.now();
-const snap = async (name) => { const f = `${OUT}/${String(shot++).padStart(2, '0')}_${name}.jpg`; await page.screenshot({ path: f, type: 'jpeg', quality: 78 }); };
+const snap = async (name) => { const f = `${OUT}/${String(shot++).padStart(3, '0')}_${name}.jpg`; await page.screenshot({ path: f, type: 'jpeg', quality: 78 }); };
 const log = async (m) => { const g = await G(); console.log(`[${((Date.now() - t0) / 1000).toFixed(0)}s] ${m} | step ${g.step} pos ${g.pos} y ${g.y} tide ${g.tide} depth ${g.depth} use ${g.use} | ${g.objective}`); };
 
 // start, with a real tap
@@ -182,6 +182,14 @@ if (ROUTE === 'stack' || ROUTE === 'all' || ROUTE === 'late') {
   const endOn = await page.evaluate(() => document.getElementById('end').classList.contains('on'));
   console.log(endOn ? '  PASS end card shown' : '  FAIL end card not shown'); results.push(['end card', endOn]);
   await snap('endcard');
+}
+if (ROUTE === 'bram') {
+  const E = async (n, what) => { const g = await G(); const ok = g.errands >= n; console.log(ok ? `  PASS ${what}` : `  FAIL ${what} (errands ${g.errands})`); results.push([what, ok]); };
+  await dial(-1); await waitTide((t) => t < -1.5, 15000);
+  await walk(12, -16.2, { r: 1.0, during: async () => dial(-1) }); await use(); await E(1, 'Bram asks');
+  await walk(34, -76.8, { r: 0.8, during: async () => dial(-1) }); await use(); await E(2, 'found the spade');
+  await walk(12, -16.2, { r: 1.0, during: async () => dial(-1) }); await use(); await E(3, 'spade returned');
+  await dialOff();
 }
 if (ROUTE === 'errands') {
   const E = async (n, what) => { const g = await G(); const ok = g.errands >= n; console.log(ok ? `  PASS ${what}` : `  FAIL ${what} (errands ${g.errands})`); results.push([what, ok]); };
