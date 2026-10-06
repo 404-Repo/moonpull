@@ -17,6 +17,8 @@ import { buildFlats, FLATS } from './flats.js';
 import { buildScenery } from './scenery.js';
 import { dressHarbour, dressFlats, gulls } from './dress.js';
 import { buildGullHead } from './gullhead.js';
+import { buildStack } from './stack.js';
+import { makeFinale } from './finale.js';
 
 const $ = (id) => document.getElementById(id);
 const Q = new URLSearchParams(location.search);
@@ -94,13 +96,17 @@ const lanternLight = new THREE.PointLight(0x9fd8ff, 2.2, 6, 2);
 scene.add(lanternLight);
 
 const story = new Story(world);
-const ctx = { put, person, anim, world, scene, sfx, story, player, touch: isTouch, inv: {}, cam: null };
+const ctx = { put, person, anim, world, scene, sfx, story, player, touch: isTouch, inv: {}, cam: null, music,
+  has: (slug) => AVAIL.has(slug),
+  asset: (slug, o = {}) => ASSET(`./assets/${slug}.js`, { surfaces: true, ...o }),
+  found: 0, foundOf: 0 };
 progress(0.35, 'building Gullwick');
 await buildHarbour(ctx);
 progress(0.6, 'draining the flats');
 await buildFlats(ctx);
 await buildScenery(ctx);
 await buildGullHead(ctx);
+await buildStack(ctx);
 hud.window = () => (ctx.tideWindow ? ctx.tideWindow() : null);
 progress(0.8, 'hanging out the washing');
 await dressHarbour(ctx);
@@ -121,6 +127,8 @@ player.place(HARBOUR.start.x, HARBOUR.start.z, HARBOUR.start.yaw);
 player.onSwept = () => { hud.fade(true); sfx.splash(); hud.toast('The sea carried you back to dry ground.', 3); setTimeout(() => hud.fade(false), 900); };
 const cam = new FollowCam(camera, terrainH);
 ctx.cam = cam;
+let seaMoved = 0, lastLevel = 0, t0play = 0;
+makeFinale(ctx, { rig, camera, scene, stats: () => { const m = Math.round((performance.now() - t0play) / 60000); return { time: m + ' min', sea: seaMoved.toFixed(0) + ' m', knocks: ctx.headDone ? ctx.headDone.bumps : 0, found: ctx.found, of: ctx.foundOf }; } });
 cam.blockers = (x, z) => world.blockerTop(x, z);
 cam.resize(innerWidth, innerHeight);
 cam.snap(player.pos, Math.PI * 0.08);
@@ -140,7 +148,7 @@ let playing = false;
 function start() {
   if (playing) return;
   playing = true;
-  initAudio();
+  initAudio(); t0play = performance.now();
   $('title').classList.remove('on'); $('hud').classList.add('on');
   // dev only: ?step=n&at=x,z jumps ahead for my own testing (gates never use it)
   const st = +(Q.get('step') || 0);
@@ -163,8 +171,9 @@ function frame() {
   t += dt;
   pollKeys();
   if (playing) {
-    if (input.act) { input.act = false; if (hud.talking) sayAdvance(); else { const u = world.nearestUse(player.pos.x, player.pos.z); if (u && !u.busy) u.use(); } }
+    if (input.act) { input.act = false; const u = world.nearestUse(player.pos.x, player.pos.z); if (u && !u.busy) u.use(); else if (hud.talking) sayAdvance(); }
     updateTide(dt, input);
+    seaMoved += Math.abs(tide.level - lastLevel); lastLevel = tide.level;
     player.update(dt, input, cam.yaw);
     story.update();
   } else { input.act = false; }
@@ -179,7 +188,9 @@ function frame() {
   lanternLight.intensity = tide.locked ? 0 : 1.6 + Math.min(2.5, Math.abs(tide.speed) * 3);
   SEA.uSea.value = tide.level; SEA.uWet.value = tide.wet; SEA.uTime.value = t;
   sea.position.y = tide.level;
-  cam.update(dt, player.pos, player.vel, input.look);
+  if (ctx.boss && ctx.boss.active) { cam.aim = cam.aim || new THREE.Vector3(); cam.aim.set(ctx.boss.x, 0, ctx.boss.z); cam.extraArm = 1.5; cam.extraPitch = -0.02; }
+  else if (cam.aim) { cam.aim = null; cam.extraArm = 0; cam.extraPitch = 0; }
+  if (!(ctx.finaleUpdate && ctx.finaleUpdate(dt))) cam.update(dt, player.pos, player.vel, input.look);
   if (window.__VIEW__) { const v = window.__VIEW__; camera.position.set(v[0], v[1], v[2]); camera.lookAt(v[3], v[4], v[5]); }
   if (window.__TIDE__ !== undefined) { tide.level = tide.target = window.__TIDE__; }
   // how far to the waterline, for the surf
@@ -189,7 +200,7 @@ function frame() {
     shoreDist = best;
   }
   sfx.update(dt, shoreDist, tide.speed);
-  if (playing) { const x = player.pos.x; music.play(x < -45 ? 'harbour' : x < 100 ? 'flats' : x < 185 ? 'flats' : 'boss'); music.update(dt); }
+  if (playing) { const x = player.pos.x; if (!ctx.finaleRunning && !(ctx.boss && ctx.boss.active)) music.play(x < -45 ? 'harbour' : 'flats', x < -45 ? 14 : 20); else if (ctx.boss && ctx.boss.active) music.play('boss', 1); music.update(dt); }
   hud.update(dt, playing ? world.nearestUse(player.pos.x, player.pos.z) : null);
   rig.render(camera, dt);
   const G = window.__GAME__;
@@ -197,7 +208,7 @@ function frame() {
   G.fps = Math.round(fpsT); G.speed = +player.speed.toFixed(2); G.score = story.count;
   G.draws = renderer.info.render.calls; G.tris = renderer.info.render.triangles;
   G.tide = +tide.level.toFixed(2); G.step = story.i; G.objective = story.current ? story.current.text : 'done';
-  G.depth = +player.depth.toFixed(2); G.heading = +player.yaw.toFixed(2); G.camYaw = +cam.yaw.toFixed(3); G.win = hud.window ? hud.window() : null; G.mv = [+input.move.x.toFixed(2), +input.move.y.toFixed(2)]; G.vel = [+player.vel.x.toFixed(2), +player.vel.z.toFixed(2)]; G.talking = hud.talking; G.use = (world.nearestUse(player.pos.x, player.pos.z) || {}).label || null; G.y = +player.pos.y.toFixed(2);
+  G.depth = +player.depth.toFixed(2); G.heading = +player.yaw.toFixed(2); G.camYaw = +cam.yaw.toFixed(3); G.boss = ctx.boss ? [ctx.boss.state, ctx.boss.hp, +ctx.boss.x.toFixed(1), +ctx.boss.z.toFixed(1)] : null; G.win = hud.window ? hud.window() : null; G.mv = [+input.move.x.toFixed(2), +input.move.y.toFixed(2)]; G.vel = [+player.vel.x.toFixed(2), +player.vel.z.toFixed(2)]; G.talking = hud.talking; G.use = (world.nearestUse(player.pos.x, player.pos.z) || {}).label || null; G.y = +player.pos.y.toFixed(2);
 }
 
 progress(1, 'ready');

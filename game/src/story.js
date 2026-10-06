@@ -20,7 +20,7 @@ export class Story {
   }
   update() {
     const s = this.steps[this.i];
-    if (!s || hud.talking) return;
+    if (!s) return;
     if (s.check && s.check()) this.advance();
   }
   get current() { return this.steps[this.i]; }

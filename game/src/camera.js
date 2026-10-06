@@ -40,8 +40,12 @@ export class FollowCam {
     if (look.dx) { this.yaw -= look.dx * 0.006; this.manualT = 0; }
     look.dx = 0; look.dy = 0;
     this.manualT += dt;
-    // swing gently behind the direction of travel once the player has let go of the camera
-    if (vel && this.manualT > 2.0) {
+    // a set piece can name something to keep in frame: the camera swings to put it beyond the hero
+    if (this.aim && this.manualT > 1.2) {
+      const want = Math.atan2(target.x - this.aim.x, target.z - this.aim.z);
+      let d = want - this.yaw; d = Math.atan2(Math.sin(d), Math.cos(d));
+      this.yaw += d * Math.min(1, dt * 1.5);
+    } else if (vel && this.manualT > 2.0) {
       const sp = Math.hypot(vel.x, vel.z);
       if (sp > 1.4) {
         const want = Math.atan2(-vel.x, -vel.z);

@@ -95,6 +95,7 @@ seg(96, 4, 118, -18, -0.6, -1.0, 2.5, 3);
 disc(124, -26, 6, -1.0, 4);
 
 // THE STACK. Stepping stones to the sea stack, the stack itself, the tidal basin arena.
+seg(194, 0, 216, -44, -1.75, -1.75, 1.6, 2.5);                 // the drowned spine the stones stand on
 for (let i = 0; i < 7; i++) disc(196 + i * 3.2, -6 - i * 6.2, 1.8, -1.2 + (i % 2) * 0.3, 1.2);
 disc(220, -60, 13, 3.0, 6);                                    // basin floor around the stack foot
 FEATURES.push({ k: 'stack', x: 220, z: -72, r: 7.5, h: 27 });          // the stack

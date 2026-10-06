@@ -31,7 +31,7 @@ export const hud = {
     $('tideknob').style.top = knobY + 'px';
     $('tide').classList.toggle('locked', tide.locked);
     const a = $('act');
-    if (use && !hud.talking) { a.textContent = use.label; a.classList.add('on'); } else a.classList.remove('on');
+    if (use) { a.textContent = use.label; a.classList.add('on'); } else a.classList.remove('on');
   },
 };
 function next() {

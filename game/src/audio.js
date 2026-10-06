@@ -65,7 +65,7 @@ function cue(name) {
   return cues[name];
 }
 export const music = {
-  want: null, vol: 0.42, gap: 14, have: new Set(['harbour']),
+  want: null, vol: 0.42, gap: 14, have: new Set(['harbour', 'flats', 'boss', 'finale']),
   play(name, gap = 14) { if (!this.have.has(name)) return; if (this.want === name) return; this.want = name; this.gap = gap; gapT = 0; },
   update(dt) {
     for (const [n, a] of Object.entries(cues)) {

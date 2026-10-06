@@ -89,3 +89,16 @@ body:not(.touchdev) .act { right: 50%; transform: translateX(50%); bottom: calc(
 body.clean #hud > * { opacity: 0 !important; }
 
 #tiderange.win { background: rgba(140, 255, 170, .75); box-shadow: 0 0 12px rgba(140,255,170,.9); }
+
+#hearts { position: absolute; right: 64px; top: calc(18px + var(--st)); font-size: 20px; color: #ff8a6a; letter-spacing: 4px; text-shadow: 0 1px 3px rgba(0,0,0,.5); }
+#hearts em { color: rgba(255,255,255,.25); font-style: normal; }
+#bossbar { position: absolute; right: 14px; top: calc(60px + var(--st)); display: none; text-align: center; padding: 6px 14px; border-radius: 10px; background: var(--paper); border: 1px solid var(--edge); }
+#bossbar.on { display: block; }
+#bossbar .nm { font-family: var(--serif); font-size: 14px; color: #ffd9c8; }
+#bossbar .pips { display: flex; gap: 6px; justify-content: center; margin-top: 4px; }
+#bossbar i { width: 34px; height: 7px; border-radius: 4px; background: #e4683f; }
+#bossbar i.gone { background: rgba(255,255,255,.18); }
+.row { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+.btn.ghost { background: transparent; color: #fff3df; }
+.st { color: var(--moon); font-weight: 700; }
+@media (orientation: portrait) { #obj { max-width: 62vw; } }
