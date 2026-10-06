@@ -13,6 +13,7 @@ import { FollowCam } from './camera.js';
 import { Story } from './story.js';
 import { initAudio, sfx } from './audio.js';
 import { buildHarbour, HARBOUR } from './harbour.js';
+import { buildFlats } from './flats.js';
 
 const $ = (id) => document.getElementById(id);
 const Q = new URLSearchParams(location.search);
@@ -85,14 +86,17 @@ const lanternLight = new THREE.PointLight(0x9fd8ff, 2.2, 6, 2);
 scene.add(lanternLight);
 
 const story = new Story(world);
-const ctx = { put, person, anim, world, scene, sfx, story, player, touch: isTouch };
+const ctx = { put, person, anim, world, scene, sfx, story, player, touch: isTouch, inv: {}, cam: null };
 progress(0.35, 'building Gullwick');
 await buildHarbour(ctx);
+progress(0.6, 'draining the flats');
+await buildFlats(ctx);
 progress(0.9, 'the tide is turning');
 
 player.place(HARBOUR.start.x, HARBOUR.start.z, HARBOUR.start.yaw);
 player.onSwept = () => { hud.fade(true); sfx.splash(); hud.toast('The sea carried you back to dry ground.', 3); setTimeout(() => hud.fade(false), 900); };
 const cam = new FollowCam(camera, terrainH);
+ctx.cam = cam;
 cam.resize(innerWidth, innerHeight);
 cam.snap(player.pos, Math.PI * 0.08);
 
@@ -113,7 +117,11 @@ function start() {
   playing = true;
   initAudio();
   $('title').classList.remove('on'); $('hud').classList.add('on');
-  story.begin(0);
+  // dev only: ?step=n&at=x,z jumps ahead for my own testing (gates never use it)
+  const st = +(Q.get('step') || 0);
+  if (st > 0) { tide.locked = false; if (st > 3) { tide.lo = -2.4; tide.hi = 2.4; } }
+  if (Q.get('at')) { const [x, z] = Q.get('at').split(',').map(Number); player.place(x, z, player.yaw); cam.snap(player.pos, cam.yaw); }
+  story.begin(st);
 }
 window.__START__ = start;
 $('startb').addEventListener('click', start);

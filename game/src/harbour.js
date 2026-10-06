@@ -35,7 +35,10 @@ export async function buildHarbour(ctx) {
   // the jetty: three sections from the street out over the beach to the water
   for (let i = 0; i < 3; i++) {
     const z = 38 - i * 8;
-    await put('jetty', -141, z, { y: 2.6 - 2.6 });   // piles to y = 0 of the asset, deck top 2.6
+    // stretch the piles down to the lowest ground under the section, deck top stays at 2.6
+    let gmin = 9; for (let k = -4; k <= 4; k += 1) gmin = Math.min(gmin, world.terrain(-141, z + k));
+    const jt = await put('jetty', -141, z, { raw: true });
+    if (jt) { jt.position.y = gmin; jt.scale.y = (2.6 - gmin) / 2.6; }
     world.plat({ x: -141, z, hw: 1.25, hd: 4.0, top: 2.6 });
   }
   world.plat({ x: -141, z: 43.5, hw: 1.3, hd: 1.6, top: (lx, lz) => 2.6 + (lz / 1.6 + 1) * 0.0 });
