@@ -23,7 +23,10 @@ export const hud = {
     const toPx = (lv) => Math.max(0, Math.min(h, (lv + span / 2) / span * h));
     $('tidelevel').style.height = toPx(tide.level) + 'px';
     $('tiderest').style.bottom = toPx(tide.rest) + 'px';
-    $('tiderange').style.bottom = toPx(tide.lo) + 'px'; $('tiderange').style.height = (toPx(tide.hi) - toPx(tide.lo)) + 'px';
+    const win = hud.window ? hud.window() : null;
+    const lo = win ? win[0] : tide.lo, hi = win ? win[1] : tide.hi;
+    $('tiderange').style.bottom = toPx(lo) + 'px'; $('tiderange').style.height = (toPx(hi) - toPx(lo)) + 'px';
+    $('tiderange').classList.toggle('win', !!win);
     const knobY = 10 + (h - toPx(tide.level));
     $('tideknob').style.top = knobY + 'px';
     $('tide').classList.toggle('locked', tide.locked);

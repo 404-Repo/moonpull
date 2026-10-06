@@ -107,6 +107,7 @@ if (ROUTE === 'harbour' || ROUTE === 'all') {
   await walk(-159.5, 30.8, { r: 1.0, snapEvery: 3000 });
   await use(); await talkThrough();
   await expectStep(6, 'talked to Tam');
+  await walk(-160, 41.2, { r: 1.2 });
   await dial(1); await waitTide((t) => t > 2.1, 15000); await sleep(2500); await snap('boatfloat');
   await talkThrough();
   await expectStep(7, 'floated Tam\'s boat');
@@ -133,6 +134,24 @@ if (ROUTE === 'flats' || ROUTE === 'all') {
   await walk(103, -4, { r: 2.5, snapEvery: 3000, name: 'east2', during: async () => dial(-1) });
   await dialOff();
   await expectStep(12, 'carried the lens to Gull Head');
+}
+if (ROUTE === 'head' || ROUTE === 'all' || ROUTE === 'late') {
+  await walk(99, -1.8, { r: 1.2, name: 'head' });
+  await use(); await talkThrough();
+  await expectStep(13, 'met Tam at Gull Head');
+  await walk(100.5, -4.5, { r: 1.5 });
+  await use(); await sleep(500);
+  await expectStep(14, 'boarded the boat');
+  const end = Date.now() + 150000; let lastSnap = 0;
+  while (Date.now() < end) {
+    const g = await G();
+    if (g.step >= 15) break;
+    if (g.win) { const c = (g.win[0] + g.win[1]) / 2; await dial(Math.max(-1, Math.min(1, c / 2.4))); }
+    if (Date.now() - lastSnap > 4000) { lastSnap = Date.now(); await snap('needle'); }
+    await sleep(150);
+  }
+  await dialOff();
+  await expectStep(15, 'threaded the Needles');
 }
 await log('end'); await snap('end');
 const g = await G();

@@ -32,13 +32,14 @@ export async function dressHarbour(ctx) {
     await put('windswept_pine', x, z, { rot: rnd() * 6, scale: 0.8 + rnd() * 0.6 });
   }
   for (const [x, z] of [[-196, 52], [-104, 54], [-108, 64], [-194, 66], [-171, 61], [-118, 61]]) { await put('windswept_pine', x, z, { rot: rnd() * 6, scale: 0.9 + rnd() * 0.3 }); world.solid({ x, z, r: 0.5 }); }
-  for (let i = 0; i < 34; i++) {
+  for (let i = 0; i < 90; i++) {
     const x = -205 + rnd() * 115, z = 38 + rnd() * 40;
     const h = T(x, z);
     if (h < 2.5) continue;
     let near = false; for (const s of world.solids) if (Math.hypot(s.x - x, s.z - z) < 3.2) { near = true; break; }
     if (near) continue;
-    await put('shrub_clump', x, z, { rot: rnd() * 6, scale: 0.7 + rnd() * 0.6 });
+    if (Math.abs(z - 48) < 6.5 || Math.abs(z - 62) < 5) continue;   // keep the street and the lane open
+    await put('shrub_clump', x, z, { rot: rnd() * 6, scale: 0.6 + rnd() * 0.7 });
   }
   // a few boulders fallen at the cliff foot
   for (let i = 0; i < 7; i++) {
@@ -69,6 +70,25 @@ export async function dressFlats(ctx) {
     await put('fish_weir', x, z, { rot: r });
   }
   await put('anchor', 36, -50, { rot: 0.8 }); world.solid({ x: 36, z: -50, r: 1.2 });
+  // something every dozen metres along the two walks across the flats, off to either side
+  const legs = [[[-30, 4], [40, -40]], [[52, -50], [100, -6]]];
+  const kinds = ['sea_rock', 'kelp_clump', 'fish_weir', 'kelp_clump', 'rowboat', 'sea_rock', 'kelp_clump', 'buoy'];
+  let k = 0;
+  for (const [[ax, az], [bx, bz]] of legs) {
+    const L = Math.hypot(bx - ax, bz - az), nx = -(bz - az) / L, nz = (bx - ax) / L;
+    for (let d = 8; d < L - 6; d += 11) {
+      const side = (k % 2 ? 1 : -1) * (5 + rnd() * 8);
+      const x = ax + (bx - ax) * d / L + nx * side, z = az + (bz - az) * d / L + nz * side;
+      const slug = kinds[k++ % kinds.length];
+      if (slug === 'rowboat' || slug === 'buoy') {
+        const o = await put(slug, x, z, { raw: true, rot: rnd() * 6 });
+        if (o) world.floater(o, { x, z, draft: slug === 'rowboat' ? 0.14 : 0.3, rot: rnd() * 6, tiltWhenGrounded: slug === 'rowboat' ? 0.25 : 0.5, bob: 1.5 });
+        continue;
+      }
+      await put(slug, x, z, { rot: rnd() * 6, scale: slug === 'sea_rock' ? 0.7 + rnd() * 0.7 : 1 });
+      if (slug === 'sea_rock') world.solid({ x, z, r: 1.5 });
+    }
+  }
   for (const [x, z] of [[5, -60], [60, -66], [-15, -28], [88, -52], [20, -88], [64, -16]]) {
     const o = await put('buoy', x, z, { raw: true, rot: rnd() * 6 });
     if (o) world.floater(o, { x, z, draft: 0.3, rot: rnd() * 6, tiltWhenGrounded: 0.5, bob: 2 });

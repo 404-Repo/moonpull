@@ -87,3 +87,5 @@ body:not(.touchdev) .act { right: 50%; transform: translateX(50%); bottom: calc(
   #toast { bottom: 24px; }
 }
 body.clean #hud > * { opacity: 0 !important; }
+
+#tiderange.win { background: rgba(140, 255, 170, .75); box-shadow: 0 0 12px rgba(140,255,170,.9); }

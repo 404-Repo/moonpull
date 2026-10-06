@@ -28,6 +28,7 @@ export class Player {
 
   update(dt, input, camYaw) {
     const w = this.world;
+    if (this.riding) { this.speed = 0; this.vel.set(0, 0, 0); this.depth = 0; this.animate(dt); return; }
     let mx = input.move.x, my = input.move.y;
     if (this.frozen || this.swept > 0) { mx = 0; my = 0; }
     const mag = Math.min(1, Math.hypot(mx, my));

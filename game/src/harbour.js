@@ -149,6 +149,7 @@ export async function buildHarbour(ctx) {
       hud.say([
         ['Tam', 'You have the keeper\'s lantern! The sea dropped my boat in the mud a month ago and never came back for her.'],
         ['Tam', 'Bring it up high, higher than any tide I remember, and I will float her off.'],
+        ['Tam', 'But get yourself up on the wall first. That much sea will take you off your feet.'],
       ], done);
     } });
 

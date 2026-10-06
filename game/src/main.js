@@ -16,6 +16,7 @@ import { buildHarbour, HARBOUR } from './harbour.js';
 import { buildFlats, FLATS } from './flats.js';
 import { buildScenery } from './scenery.js';
 import { dressHarbour, dressFlats, gulls } from './dress.js';
+import { buildGullHead } from './gullhead.js';
 
 const $ = (id) => document.getElementById(id);
 const Q = new URLSearchParams(location.search);
@@ -29,7 +30,7 @@ const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPrefere
 renderer.setSize(innerWidth, innerHeight, false);
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(42, innerWidth / innerHeight, 0.3, 900);
-const rig = createRig(THREE, renderer, scene, { hour: 17.25, azimuth: 288, camera, fogStart: 70, fogDensity: 0.0011, tier: Q.get('q') || 'auto' });
+const rig = createRig(THREE, renderer, scene, { hour: 17.65, azimuth: 288, camera, fogStart: 70, fogDensity: 0.0011, tier: Q.get('q') || 'auto' });
 
 // --- the coast ---------------------------------------------------------------------------
 progress(0.05, 'raising the coast');
@@ -99,6 +100,8 @@ await buildHarbour(ctx);
 progress(0.6, 'draining the flats');
 await buildFlats(ctx);
 await buildScenery(ctx);
+await buildGullHead(ctx);
+hud.window = () => (ctx.tideWindow ? ctx.tideWindow() : null);
 progress(0.8, 'hanging out the washing');
 await dressHarbour(ctx);
 await dressFlats(ctx);
@@ -193,7 +196,7 @@ function frame() {
   G.fps = Math.round(fpsT); G.speed = +player.speed.toFixed(2); G.score = story.count;
   G.draws = renderer.info.render.calls; G.tris = renderer.info.render.triangles;
   G.tide = +tide.level.toFixed(2); G.step = story.i; G.objective = story.current ? story.current.text : 'done';
-  G.depth = +player.depth.toFixed(2); G.heading = +player.yaw.toFixed(2); G.camYaw = +cam.yaw.toFixed(3); G.mv = [+input.move.x.toFixed(2), +input.move.y.toFixed(2)]; G.vel = [+player.vel.x.toFixed(2), +player.vel.z.toFixed(2)]; G.talking = hud.talking; G.use = (world.nearestUse(player.pos.x, player.pos.z) || {}).label || null; G.y = +player.pos.y.toFixed(2);
+  G.depth = +player.depth.toFixed(2); G.heading = +player.yaw.toFixed(2); G.camYaw = +cam.yaw.toFixed(3); G.win = hud.window ? hud.window() : null; G.mv = [+input.move.x.toFixed(2), +input.move.y.toFixed(2)]; G.vel = [+player.vel.x.toFixed(2), +player.vel.z.toFixed(2)]; G.talking = hud.talking; G.use = (world.nearestUse(player.pos.x, player.pos.z) || {}).label || null; G.y = +player.pos.y.toFixed(2);
 }
 
 progress(1, 'ready');

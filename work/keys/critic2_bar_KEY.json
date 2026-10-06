@@ -1,0 +1,42 @@
+{
+ "pair_01.png": {
+  "build": "left",
+  "build_file": "00_start.jpg",
+  "ref_file": "05_play.jpg"
+ },
+ "pair_02.png": {
+  "build": "left",
+  "build_file": "05_walk.jpg",
+  "ref_file": "07_play.jpg"
+ },
+ "pair_03.png": {
+  "build": "right",
+  "build_file": "09_causeway.jpg",
+  "ref_file": "13_play.jpg"
+ },
+ "pair_04.png": {
+  "build": "right",
+  "build_file": "11_wellfull.jpg",
+  "ref_file": "desktop-05-explore.jpg"
+ },
+ "pair_05.png": {
+  "build": "right",
+  "build_file": "17_walk.jpg",
+  "ref_file": "03_play.jpg"
+ },
+ "pair_06.png": {
+  "build": "right",
+  "build_file": "28_east.jpg",
+  "ref_file": "07_play.jpg"
+ },
+ "pair_07.png": {
+  "build": "left",
+  "build_file": "37_flats.jpg",
+  "ref_file": "05_play.jpg"
+ },
+ "pair_08.png": {
+  "build": "right",
+  "build_file": "44_toraft.jpg",
+  "ref_file": "06_play.jpg"
+ }
+}

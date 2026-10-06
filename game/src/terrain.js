@@ -69,7 +69,7 @@ const disc = (x, z, r, h, f, mode = 'set', path = 0) => FEATURES.push({ k: 'disc
 const mound = (x, z, r, h) => FEATURES.push({ k: 'mound', x, z, r, h });
 
 // HARBOUR (Gullwick). Village bench sits about +4.9; beach 0.4..1.7.
-disc(-150, 48.5, 8, 4.9, 5, 'set', 0.8);                                  // Nell's yard and the square
+disc(-150, 48, 8, 4.9, 5, 'set', 0.6);                                  // Nell's yard and the square
 seg(-192, 48, -110, 47, 4.9, 4.9, 6, 5, 'set', 3.2);                      // the village street along the bench
 seg(-150, 40, -150, 31, 4.9, 1.6, 2.2, 3, 'set', 2.2);                    // stair-ramp from the square to the beach
 seg(-118, 42, -112, 31, 4.9, 1.5, 2.0, 3, 'set', 2.0);                    // second ramp by the boathouse
