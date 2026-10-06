@@ -11,7 +11,7 @@ import { World } from './world.js';
 import { Player } from './player.js';
 import { FollowCam } from './camera.js';
 import { Story } from './story.js';
-import { initAudio, sfx } from './audio.js';
+import { initAudio, sfx, music } from './audio.js';
 import { buildHarbour, HARBOUR } from './harbour.js';
 import { buildFlats, FLATS } from './flats.js';
 import { buildScenery } from './scenery.js';
@@ -189,6 +189,7 @@ function frame() {
     shoreDist = best;
   }
   sfx.update(dt, shoreDist, tide.speed);
+  if (playing) { const x = player.pos.x; music.play(x < -45 ? 'harbour' : x < 100 ? 'flats' : x < 185 ? 'flats' : 'boss'); music.update(dt); }
   hud.update(dt, playing ? world.nearestUse(player.pos.x, player.pos.z) : null);
   rig.render(camera, dt);
   const G = window.__GAME__;

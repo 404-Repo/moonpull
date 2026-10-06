@@ -55,3 +55,29 @@ export const sfx = {
     gullT -= dt; if (gullT < 0) { gullT = 4 + Math.random() * 9; sfx.gull(); if (Math.random() < 0.5) setTimeout(() => sfx.gull(), 220); }
   },
 };
+
+// Music: short scored pieces (Atlas, MiniMax Music) played with breathing room between plays,
+// so a 20 s cue does not loop into wallpaper. One cue per place; crossfade on change.
+const cues = {};
+let current = null, gapT = 0;
+function cue(name) {
+  if (!cues[name]) { const a = new Audio(`./audio/${name}.mp3`); a.preload = 'auto'; a.volume = 0; cues[name] = a; }
+  return cues[name];
+}
+export const music = {
+  want: null, vol: 0.42, gap: 14, have: new Set(['harbour']),
+  play(name, gap = 14) { if (!this.have.has(name)) return; if (this.want === name) return; this.want = name; this.gap = gap; gapT = 0; },
+  update(dt) {
+    for (const [n, a] of Object.entries(cues)) {
+      const target = n === this.want && !a.paused ? this.vol : 0;
+      a.volume = Math.max(0, Math.min(1, a.volume + Math.sign(target - a.volume) * Math.min(Math.abs(target - a.volume), dt * 0.35)));
+      if (n !== this.want && a.volume <= 0.001 && !a.paused) a.pause();
+    }
+    if (!this.want) return;
+    const a = cue(this.want);
+    if (a.paused || a.ended) {
+      gapT -= dt;
+      if (gapT <= 0) { a.currentTime = 0; a.volume = Math.max(a.volume, 0.01); a.play().catch(() => {}); gapT = this.gap; }
+    }
+  },
+};
