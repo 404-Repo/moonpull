@@ -1,0 +1,32 @@
+{
+ "pair_01.png": {
+  "build": "left",
+  "build_file": "005_walk.jpg",
+  "ref_file": "f0.jpg"
+ },
+ "pair_02.png": {
+  "build": "right",
+  "build_file": "009_causeway.jpg",
+  "ref_file": "f1.jpg"
+ },
+ "pair_03.png": {
+  "build": "left",
+  "build_file": "037_flats.jpg",
+  "ref_file": "f2.jpg"
+ },
+ "pair_04.png": {
+  "build": "right",
+  "build_file": "041_toraft.jpg",
+  "ref_file": "f3.jpg"
+ },
+ "pair_05.png": {
+  "build": "right",
+  "build_file": "053_needle.jpg",
+  "ref_file": "f4.jpg"
+ },
+ "pair_06.png": {
+  "build": "right",
+  "build_file": "064_boss.jpg",
+  "ref_file": "f5.jpg"
+ }
+}

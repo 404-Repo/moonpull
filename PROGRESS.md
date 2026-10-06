@@ -75,3 +75,46 @@ The whole game exists and plays from title to end card. Serving at **:8796**.
 **Critic round 3** (fresh critic, blind, same podium frames as round 2, frames now include the Needle Run and the boss): vs podium **5 of 8** (losses: Bellkeeper's wide square clear, SUNDRIFT clear and slight), vs floor **6 of 6** (3 decisive). The critic says the colour grade is now our strongest property and empty ground is fixed in the harbour and Gull Head but not on the Shellflats. First property it names: the hero's size in frame (8 to 10% of frame height). That conflicts with Ben's instruction to use Bellkeeper's camera (whose hero is about 1/8 of the frame), so I kept the camera and changed the hero instead (v2 silhouette, rim light, lantern-styled dial, lighter captions). Not re-judged yet.
 
 Not done: jam.mjs against a public URL; the Shellflats still give 40 to 60% of some frames to bare sand; the arches read blocky; a human first-play time is unknown.
+
+## Milestone 4: jam gate PASS and blind comparison (2026-10-06)
+
+No public repo or Pages site was created (Ben's call). The gate ran against the existing tunnel and against localhost, one at a time, no orphaned Chrome found beforehand.
+
+**jam.mjs** (recipe @ 4effad3, 390x844 @3x phone, real touch, 4G profile, CPU 2x slower), final commit 833c58b. Verdict blocks in `work/jam_verdicts_final.txt`.
+
+| | localhost:8796 | tunnel (riders-swap-diana-glenn.trycloudflare.com) |
+|---|---|---|
+| ready | 7.2 s (budget 20) | 8.2 s |
+| weight | 3.6 MB (budget 10) | 3.6 MB |
+| started / moved | real tap / 15.4 m | real tap / 15.4 m |
+| peak draws / tris | 203 / 687,032 | 203 / 687,032 |
+| errors / 404s | 0 / 0 | 0 / 0 |
+| external deps | cdn only (jsdelivr three, Google Fonts) | same |
+| RESULT | PASS | PASS |
+
+The fps the gate prints (60) is the Mac's Metal GPU, not a phone; the gate does not judge fps and neither do I. The earlier runs on 74371ea and 888eb0b also passed on both URLs (tunnel ready 8.0 and 9.8 s; the tunnel adds latency the real gate would not).
+
+**My own gate after the last change** (tools/play.mjs, real multi-touch, 390x844): main story 20 of 20, 0 errors.
+
+**Shellflats fill** (critic 3's second property): a trail of the wreck's cargo half buried in the sand, more fish weirs (now solid), four more beached rowboats that float on a rising sea, dark reef rocks with kelp skirts, sand ripple relief in the ground shader, the wreck's sand base sunk.
+
+**Blind comparison, rounds 4 and 5** (fresh harsh critic each, keys withheld, same podium frames as rounds 2 and 3, my frames at the same fixed indices of a fresh full run so I could not cherry-pick):
+
+| round | vs podium | vs floor | losses vs podium | property named first |
+|---|---|---|---|---|
+| 2 | 5 of 8 | 6 of 6 | Bellkeeper wide square (decisive), SUNDRIFT x2 (decisive) | colour grade and main light |
+| 3 | 5 of 8 | 6 of 6 | Bellkeeper wide square (clear), SUNDRIFT (clear, slight) | hero size and silhouette |
+| 4 | 5 of 8 | 6 of 6 | Bellkeeper square (slight), Bellkeeper wide square (decisive), SUNDRIFT (decisive) | blurred, glowing foreground |
+| 5 | 5 of 8 | 6 of 6 | Bellkeeper wide square (decisive), SUNDRIFT (decisive, clear) | ground plane material and foreground props |
+
+What round 4 named and what I did: the "blur" was real and measurable, the render rig's phone tier draws at 1x and a 3x phone upscales it; the game now renders at up to 2x. I also softened the lantern's light pool and made weirs solid (a post rendered through the player). Round 5 still calls the near ground soft and under-dressed, so this is only partly fixed.
+
+**Reading of the numbers, honestly:**
+- Against the floor (one agent, one pass) the method wins every pair in five rounds, 29 of 30 overall.
+- Against the podium the count has sat at 5 of 8 for four rounds while the named property changed each time. The same three podium frames win every round: Bellkeeper's wide, dense village square (a landscape capture, which the critics said helped it) and SUNDRIFT's two frames with a single committed art direction (CRT frame, branded HUD, ink-line trees). By GAME.md's stopping rule that is a gap about art direction and composition, not something another polish round closes. I stopped here.
+- The critics correctly spotted which game was constant each round, so the pairs are blind to side, not to identity.
+- Eight pairs is coarse; a landscape-vs-portrait shape mismatch remains in the podium set.
+
+**Would it win the jam?** Measured: it clears the gate with margin, beats the floor every time, and wins 5 of 8 frame pairs against the podium's best frames. Inferred, not measured: stage two is 40% "good to play"; the tide verb, boss and Needle Run all work under my bot, but nobody has played it for 30 minutes by hand, and a human first-play time is unknown. Its "what nobody else tried" (the sea level as the player's tool) is the strongest card. Against Bellkeeper's look it is behind on art direction.
+
+**What I would do next:** a human playtest on a real phone (feel of the tide dial, boss difficulty, the sea's pull-back speed); commit to one rendering style the way SUNDRIFT does (an outline or toon pass across world and hero) instead of more props; a dense hand-composed hero shot in the harbour square at landscape aspect; and a nearer camera option only if Ben agrees, since the critics keep asking for a bigger hero and Ben asked for Bellkeeper's camera.
