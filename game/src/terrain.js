@@ -41,9 +41,9 @@ const wStack = (x) => sstep(170, 195, x);
 function landProfile(d, x) {
   // harbour and stack: beach, a village bench, an upper bench, cliffs
   const beach = lerp(0.35, 1.7, sstep(0, 9, d));
-  const bench1 = 3.2 * sstep(9, 15, d);
-  const bench2 = 4.6 * sstep(34, 42, d);
-  const cliff = 17 * sstep(56, 74, d) + 6 * sstep(80, 120, d);
+  const bench1 = 3.2 * sstep(9, 13, d);
+  const bench2 = 4.7 * sstep(24, 29, d);
+  const cliff = 19 * sstep(41, 50, d) + 7 * sstep(58, 100, d);
   const village = beach + bench1 + bench2 + cliff;
   // flats: low dunes and marram, then a rising moor
   const dunes = lerp(0.3, 2.2, sstep(0, 14, d)) + 1.2 * sstep(20, 40, d) + 9 * sstep(60, 110, d);

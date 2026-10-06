@@ -18,19 +18,21 @@ export async function buildHarbour(ctx) {
   const H = HARBOUR;
 
   // --- the village: houses face the sea (-Z), so they turn half a circle ----------------
-  const houses = [
-    ['stilt_house_b', -182, 60, 0.15], ['stilt_house_a', -168, 61, -0.05], ['stilt_house_b', -136, 61, 0.1],
-    ['stilt_house_a', -122, 60, -0.12], ['stilt_house_b', -158, 72, 0.05], ['stilt_house_a', -142, 73, -0.08],
-    // on stilts at the shore, where the high tide runs under them
-    ['stilt_house_a', -184, 33, 0.25], ['stilt_house_b', -132, 33, -0.2], ['stilt_house_a', -176, 26, 0.35],
-  ];
+  const houses = [];
+  const A = 'stilt_house_a', B = 'stilt_house_b';
+  // bench 1, behind the street (the square and Nell's yard stay open at -160..-140)
+  [[-189, 56, A], [-178, 55.5, B], [-168, 56.5, A], [-133, 56, B], [-123.5, 55.5, A], [-114, 56.5, B]].forEach(([x, z, k], i) => houses.push([k, x, z, (i % 3 - 1) * 0.09]));
+  // bench 2, the upper lane
+  [[-186, 67, B], [-175, 68, A], [-163, 67.5, B], [-151, 68.5, A], [-139, 67, B], [-127, 68, A], [-116, 67.5, B]].forEach(([x, z, k], i) => houses.push([k, x, z, ((i + 1) % 3 - 1) * 0.1]));
+  // at the waterline, on stilts the high tide runs under
+  [[-187, 29, A, 0.25], [-178, 27.5, B, 0.3], [-131, 30, A, -0.2], [-122, 31.5, B, -0.25]].forEach(([x, z, k, r]) => houses.push([k, x, z, r]));
   for (const [slug, x, z, r] of houses) {
-    const o = await put(slug, x, z, { rot: Math.PI + r });
+    const o = await put(slug, x, z, { rot: Math.PI + r, foot: 2.6 });
     if (o) world.solid({ x, z, hw: 2.9, hd: 2.5, rot: Math.PI + r, y1: world.terrain(x, z) + 6 });
   }
   // Nell's house is the boathouse at the top of the slip
   const bh = await put('boathouse', -110, 25, { rot: Math.PI - 0.08 });
-  if (bh) world.solid({ x: -110, z: 25, hw: 3.4, hd: 6.8, rot: Math.PI - 0.08 });
+  if (bh) world.solid({ x: -110, z: 25, hw: 4.1, hd: 7.0, rot: Math.PI - 0.08 });
 
   // the jetty: three sections from the street out over the beach to the water
   for (let i = 0; i < 3; i++) {
@@ -74,7 +76,7 @@ export async function buildHarbour(ctx) {
   const rbs = [];
   for (const [x, z, r] of [[-152, 27, 0.4], [-128, 22, -0.6], [-96, -30, 1.2]]) {
     const o = await put('rowboat', x, z, { rot: r, raw: true });
-    if (o) rbs.push(world.floater(o, { x, z, draft: 0.25, rot: r, tiltWhenGrounded: 0.12 }));
+    if (o) rbs.push(world.floater(o, { x, z, draft: 0.14, rot: r, tiltWhenGrounded: 0.12 }));
   }
 
   // Tam's boat, stranded in its scrape
@@ -84,7 +86,7 @@ export async function buildHarbour(ctx) {
 
   // a raft tied under the jetty end
   const raftO = await put('raft', -137, 14, { rot: 0.2, raw: true });
-  if (raftO) world.floater(raftO, { x: -137, z: 14, draft: 0.18, rot: 0.2, deck: { hw: 1.25, hd: 1.25, top: 0.45 } });
+  if (raftO) world.floater(raftO, { x: -137, z: 14, draft: 0.18, rot: 0.2, deck: { hw: 1.25, hd: 1.25, top: 0.49 } });
 
   // --- the drowned well: its water is the sea's, and the bucket rides it ------------------
   const wellWater = new THREE.Mesh(new THREE.CircleGeometry(0.8, 24), new THREE.MeshStandardMaterial({ color: 0x1b5a64, roughness: 0.1 }));

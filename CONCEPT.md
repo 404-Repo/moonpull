@@ -17,8 +17,10 @@ player owns, and every authored place is built so that both states are worth see
   every crossing a clock the player set themselves.
 - Whatever floats (rafts, boats, crates, the boss's boat shell) rides the surface; whatever is
   heavy stays put. Deep water blocks you; shallow water slows you; dry seabed opens new routes.
-- Lock gates hold water: raise the sea, shut a gate, lower the sea, and that basin keeps its
-  level. That turns one global dial into stepped, local puzzles (the sea caves).
+- The sea has a ceiling as well as a floor: in Tam's boat the keel needs water under it and the
+  mast needs sky over it, so at Gull Head you thread a moving window between reef and arch.
+  (Lock gates in sea caves were the first plan; dropped at design time because a global sea
+  with a 2.4 m reach cannot climb a 15 m shaft without a second rule players would need taught.)
 - Creatures care about the waterline: shore crabs swarm the sand at low tide and flee rising
   water, so the tide is also how you clear a path.
 
@@ -33,7 +35,7 @@ of idea that won, without copying any of them.
 |---|---|---|---|
 | 1 | Gullwick Harbour: stilt village on terraces, boathouse, causeway to a well islet | lower to walk the causeway; raise to float a stranded boat and lift the well bucket-raft | the Pull, first moon shard |
 | 2 | The Shellflats: kilometre-feel sand flats, tide pools, the wreck of the Marguerite | drain the bay to walk the seabed; push crabs back with rising water; float a hull section into a ramp | the lighthouse lens |
-| 3 | Gull Head sea caves: flooded shafts with lock gates and a raft | raise, shut gate, lower, repeat: climb a 15 m shaft by locks | second shard, the keeper's journal, clifftop path |
+| 3 | Gull Head: sea arches and reefs round a high headland, sailed in Tam's boat | the Needle Run: the boat's keel hits the reefs if the sea is too low and its mast hits the arches if it is too high, so you thread a window that moves | passage to the Stack |
 | 4 | The Stack: lighthouse on a sea stack, a tidal basin arena | stepping stones at low tide; the boss | the light, the moon, the ending |
 
 Boss: the Undertow, a giant hermit crab wearing an overturned fishing boat as its shell. No

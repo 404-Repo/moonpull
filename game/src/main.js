@@ -1,6 +1,6 @@
 // MOONPULL: boot, world, loop, telemetry.
 import * as THREE from 'three';
-import { ASSET } from '../assetlib.js';
+import { ASSET, bakeStatic } from '../assetlib.js';
 import { createRig } from '../rig.js';
 import { buildGrid, makeSampler, heightTexture, buildGroundMesh, WORLD } from './terrain.js';
 import { groundMaterial, seaMaterial, SEA } from './materials.js';
@@ -53,11 +53,14 @@ try { AVAIL = new Set(await (await fetch('./assets/index.json')).json()); } catc
 async function put(slug, x, z, o = {}) {
   if (!AVAIL.has(slug)) return null;
   const obj = await ASSET(`./assets/${slug}.js`, { surfaces: true, height: o.height });
-  obj.position.set(x, o.raw ? 0 : terrainH(x, z) + (o.y || 0), z);
+  let gy = terrainH(x, z);
+  if (o.foot) for (let a = 0; a < 8; a++) gy = Math.min(gy, terrainH(x + Math.cos(a * 0.785) * o.foot, z + Math.sin(a * 0.785) * o.foot));
+  obj.position.set(x, o.raw ? 0 : gy + (o.y || 0), z);
   obj.rotation.y = o.rot || 0;
-  scene.add(obj);
+  (o.raw ? scene : statics).add(obj);
   return obj;
 }
+const statics = new THREE.Group();
 const people = [];
 async function person(slug, x, z, yaw, o = {}) {
   let model;
@@ -92,6 +95,15 @@ await buildHarbour(ctx);
 progress(0.6, 'draining the flats');
 await buildFlats(ctx);
 progress(0.9, 'the tide is turning');
+// static scenery merged by material: one bake per area keeps culling useful
+{
+  const areas = [[-1e9, -45], [-45, 100], [100, 1e9]];
+  for (const [a, b] of areas) {
+    const g = new THREE.Group();
+    for (const c of [...statics.children]) { if (c.position.x >= a && c.position.x < b) g.add(c); }
+    if (g.children.length) { g.updateMatrixWorld(true); scene.add(Q.has('nobake') ? g : bakeStatic(g)); }
+  }
+}
 
 player.place(HARBOUR.start.x, HARBOUR.start.z, HARBOUR.start.yaw);
 player.onSwept = () => { hud.fade(true); sfx.splash(); hud.toast('The sea carried you back to dry ground.', 3); setTimeout(() => hud.fade(false), 900); };
@@ -156,6 +168,8 @@ function frame() {
   SEA.uSea.value = tide.level; SEA.uWet.value = tide.wet; SEA.uTime.value = t;
   sea.position.y = tide.level;
   cam.update(dt, player.pos, player.vel, input.look);
+  if (window.__VIEW__) { const v = window.__VIEW__; camera.position.set(v[0], v[1], v[2]); camera.lookAt(v[3], v[4], v[5]); }
+  if (window.__TIDE__ !== undefined) { tide.level = tide.target = window.__TIDE__; }
   // how far to the waterline, for the surf
   if ((shoreProbe += dt) > 0.25) {
     shoreProbe = 0; let best = 60;

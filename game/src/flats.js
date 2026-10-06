@@ -36,7 +36,7 @@ export async function buildFlats(ctx) {
 
   // the hatch-cover raft, tied to the hull so the sea can only lift it, not take it
   const raftO = await put('raft', F.raft.x, F.raft.z, { rot: F.wreck.rot, raw: true });
-  const rf = world.floater(raftO || new THREE.Group(), { x: F.raft.x, z: F.raft.z, draft: 0.18, rot: F.wreck.rot, deck: { hw: 1.25, hd: 1.25, top: 0.45 } });
+  const rf = world.floater(raftO || new THREE.Group(), { x: F.raft.x, z: F.raft.z, draft: 0.18, rot: F.wreck.rot, deck: { hw: 1.25, hd: 1.25, top: 0.49 } });
 
   // the lens, glinting in the cabin
   const lens = new THREE.Group();
