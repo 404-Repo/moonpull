@@ -102,3 +102,6 @@ body.clean #hud > * { opacity: 0 !important; }
 .btn.ghost { background: transparent; color: #fff3df; }
 .st { color: var(--moon); font-weight: 700; }
 @media (orientation: portrait) { #obj { max-width: 62vw; } }
+
+#errands { font-size: 12px; color: rgba(255,248,236,.78); margin-top: 6px; line-height: 1.45; }
+#errands:empty { display: none; }

@@ -19,6 +19,7 @@ import { dressHarbour, dressFlats, gulls } from './dress.js';
 import { buildGullHead } from './gullhead.js';
 import { buildStack } from './stack.js';
 import { makeFinale } from './finale.js';
+import { buildErrands } from './errands.js';
 
 const $ = (id) => document.getElementById(id);
 const Q = new URLSearchParams(location.search);
@@ -107,6 +108,7 @@ await buildFlats(ctx);
 await buildScenery(ctx);
 await buildGullHead(ctx);
 await buildStack(ctx);
+await buildErrands(ctx);
 hud.window = () => (ctx.tideWindow ? ctx.tideWindow() : null);
 progress(0.8, 'hanging out the washing');
 await dressHarbour(ctx);
@@ -208,7 +210,7 @@ function frame() {
   G.fps = Math.round(fpsT); G.speed = +player.speed.toFixed(2); G.score = story.count;
   G.draws = renderer.info.render.calls; G.tris = renderer.info.render.triangles;
   G.tide = +tide.level.toFixed(2); G.step = story.i; G.objective = story.current ? story.current.text : 'done';
-  G.depth = +player.depth.toFixed(2); G.heading = +player.yaw.toFixed(2); G.camYaw = +cam.yaw.toFixed(3); G.boss = ctx.boss ? [ctx.boss.state, ctx.boss.hp, +ctx.boss.x.toFixed(1), +ctx.boss.z.toFixed(1)] : null; G.win = hud.window ? hud.window() : null; G.mv = [+input.move.x.toFixed(2), +input.move.y.toFixed(2)]; G.vel = [+player.vel.x.toFixed(2), +player.vel.z.toFixed(2)]; G.talking = hud.talking; G.use = (world.nearestUse(player.pos.x, player.pos.z) || {}).label || null; G.y = +player.pos.y.toFixed(2);
+  G.depth = +player.depth.toFixed(2); G.heading = +player.yaw.toFixed(2); G.camYaw = +cam.yaw.toFixed(3); G.found = ctx.found; G.errands = ctx.errandSteps || 0; G.boss = ctx.boss ? [ctx.boss.state, ctx.boss.hp, +ctx.boss.x.toFixed(1), +ctx.boss.z.toFixed(1)] : null; G.win = hud.window ? hud.window() : null; G.mv = [+input.move.x.toFixed(2), +input.move.y.toFixed(2)]; G.vel = [+player.vel.x.toFixed(2), +player.vel.z.toFixed(2)]; G.talking = hud.talking; G.use = (world.nearestUse(player.pos.x, player.pos.z) || {}).label || null; G.y = +player.pos.y.toFixed(2);
 }
 
 progress(1, 'ready');

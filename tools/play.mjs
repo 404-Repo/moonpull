@@ -183,6 +183,25 @@ if (ROUTE === 'stack' || ROUTE === 'all' || ROUTE === 'late') {
   console.log(endOn ? '  PASS end card shown' : '  FAIL end card not shown'); results.push(['end card', endOn]);
   await snap('endcard');
 }
+if (ROUTE === 'errands') {
+  const E = async (n, what) => { const g = await G(); const ok = g.errands >= n; console.log(ok ? `  PASS ${what}` : `  FAIL ${what} (errands ${g.errands})`); results.push([what, ok]); };
+  await walk(-136.5, 42.6, { r: 1.0 }); await use(); await E(1, 'Marta asks');
+  await walk(-150, 44, { r: 1.2 }); await walk(-150, 32, { r: 1.5 });
+  await dial(-1); await waitTide((t) => t < -2.2, 15000);
+  for (const [x, z] of [[-147, 5], [-131, 3], [-160, 5]]) { await walk(x, z + 1.2, { r: 0.8, during: async () => dial(-1) }); await use(); }
+  await E(2, 'found three pots');
+  await walk(-150, 32, { r: 1.5, during: async () => dial(-1) }); await dialOff(); await walk(-150, 44, { r: 1.2 }); await walk(-136.5, 42.6, { r: 1.0 }); await use(); await E(3, 'pots returned');
+  await walk(-150, 44, { r: 1.2 }); await walk(-150, 33, { r: 1.5 });
+  await walk(-126, 35.6, { r: 1.0 }); await use(); await E(4, 'Pip asks');
+  await walk(-150, 33, { r: 1.5 }); await walk(-150, 44, { r: 1.2 });
+  await dial(1); const until = Date.now() + 60000; while (Date.now() < until) { const g = await G(); if (g.errands >= 5) break; await sleep(300); }
+  await E(5, 'boat carried home on high water');
+  await dial(-1); await waitTide((t) => t < -0.5, 15000);
+  const tb = await page.evaluate(() => { const u = __DEV__.world.uses.find((u) => u.id === 'toyboat'); return [u.x, u.z]; });
+  await walk(-150, 33, { r: 1.5, during: async () => dial(-1) });
+  await walk(tb[0], tb[1] + 1, { r: 1.0, during: async () => dial(-1) }); await use(); await E(6, 'picked up the toy boat');
+  await dialOff(); await walk(-126, 35.6, { r: 1.0 }); await use(); await E(7, 'boat returned to Pip');
+}
 await log('end'); await snap('end');
 const g = await G();
 console.log(`draws ${g.draws} tris ${g.tris} fps ${g.fps}`);
