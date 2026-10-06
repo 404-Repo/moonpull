@@ -1,0 +1,45 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}</script>
+<style>html,body{margin:0;background:#000;overflow:hidden}canvas{display:block}</style></head><body>
+<script type="module">
+// Game-distance proof: the hero through game/assetlib.js (keepHierarchy, surfaces), the game's own
+// rig (hour 17.65, azimuth 288), FollowCam geometry: fov 42, pitch atan(0.48)=25.6 deg, arm 11.5 m
+// portrait, focus 1.0 m up and 0.8 m toward the camera, portrait view offset -14%.
+import * as THREE from 'three';
+import { ASSET } from '/game/assetlib.js';
+import { createRig } from '/game/rig.js';
+const q = new URLSearchParams(location.search);
+const url = q.get('a'); const camYawDeg = +(q.get('yaw') || 0); const groundHex = parseInt(q.get('g') || 'c8ab80', 16);
+const W = innerWidth, H = innerHeight;
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(devicePixelRatio); renderer.setSize(W, H); document.body.appendChild(renderer.domElement);
+renderer.shadowMap.enabled = true;
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(42, W / H, 0.1, 400);
+const rig = createRig(THREE, renderer, scene, { hour: 17.65, azimuth: 288, camera, fogStart: 70, fogDensity: 0.0011, tier: 'high' });
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), new THREE.MeshStandardMaterial({ color: groundHex, roughness: 0.95 }));
+ground.name = 'ground'; ground.material.name = 'ground'; ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true; scene.add(ground);
+const hero = await ASSET(url, { keepHierarchy: true, surfaces: true });
+hero.traverse((n) => { if (n.isMesh) n.castShadow = true; });
+// pose: the game's own walk (player.js animate) at speed 3.5, mid-stride
+const j = hero.userData.joints || {}; const rest = {};
+for (const [k, v] of Object.entries(j)) if (v && v.rotation) rest[k] = v.rotation.clone();
+const set = (k, x, y = 0, z = 0) => { const n = j[k], r = rest[k]; if (!n || !r) return; n.rotation.set(r.x + x, r.y + y, r.z + z); };
+const ph = Math.PI / 2 + 0.2, a = 0.62, sw = Math.sin(ph), cw = Math.cos(ph);
+set('leftUpperLeg', sw * a); set('rightUpperLeg', -sw * a);
+set('leftLowerLeg', Math.max(0, -cw) * a * 1.2); set('rightLowerLeg', Math.max(0, cw) * a * 1.2);
+set('leftUpperArm', -sw * a * 0.8); set('rightUpperArm', sw * a * 0.35 - 0.15);
+set('leftLowerArm', -0.25 - a * 0.3); set('rightLowerArm', -0.35);
+set('spine', 0.05); set('scarf', 0.25);
+scene.add(hero);
+const light = new THREE.PointLight(0x9fd8ff, 2.2, 6, 2); light.position.set(-0.2, 0.6, 0.3); scene.add(light);
+// camera: yaw 0 = straight behind (model front is +Z, so the camera sits on -Z)
+const yaw = Math.PI + camYawDeg * Math.PI / 180, pitch = Math.atan(0.48), arm = 11.5;
+const f = new THREE.Vector3(Math.sin(yaw) * 0.8, 1.0, Math.cos(yaw) * 0.8);
+camera.position.set(f.x + Math.sin(yaw) * Math.cos(pitch) * arm, f.y + Math.sin(pitch) * arm, f.z + Math.cos(yaw) * Math.cos(pitch) * arm);
+camera.lookAt(f);
+camera.setViewOffset(W, H, 0, -H * 0.14, W, H); camera.updateProjectionMatrix();
+rig.resize(W, H);
+for (let i = 0; i < 4; i++) rig.render(camera, 1 / 60);
+document.title = 'DONE ' + JSON.stringify({ joints: Object.keys(j) });
+</script></body></html>
