@@ -91,6 +91,17 @@ progress(0.2, 'calling the traveller');
 let heroModel;
 if (AVAIL.has('player_girl')) heroModel = await ASSET('./assets/player_girl.js', { keepHierarchy: true, surfaces: true });
 else { heroModel = new THREE.Group(); const m = new THREE.Mesh(new THREE.CapsuleGeometry(0.28, 0.85, 4, 8), new THREE.MeshStandardMaterial({ color: 0x2f7f86 })); m.position.y = 0.72; m.castShadow = true; heroModel.add(m); }
+// a warm rim on the hero only, so she separates from sand and stone at Bellkeeper's distance
+heroModel.traverse((o) => {
+  if (!o.isMesh || !o.material || o.material.userData.rim) return;
+  const m = o.material.clone(); m.userData.rim = true; o.material = m;
+  m.onBeforeCompile = (sh) => {
+    sh.fragmentShader = sh.fragmentShader.replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>
+      { float fr = pow(1.0 - clamp(dot(normalize(vViewPosition), -normal) * -1.0, 0.0, 1.0), 3.0);
+        totalEmissiveRadiance += vec3(1.0, 0.82, 0.55) * fr * 0.55; }`);
+  };
+  m.customProgramCacheKey = () => 'hero-rim';
+});
 const player = new Player(heroModel, world);
 scene.add(player.root);
 // the lantern's own light

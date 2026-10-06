@@ -1,0 +1,2 @@
+import * as THREE from '/Users/atlas/404_assetlib/node_modules/three/build/three.module.js';
+for (const f of process.argv.slice(2)) { const g=(await import(f)).default(THREE); let t=0; g.traverse(n=>{if(n.isMesh){const q=n.geometry; t+=(q.index?q.index.count:q.attributes.position.count)/3}}); const b=new THREE.Box3().setFromObject(g); console.log(f, t, b.min.toArray().map(x=>x.toFixed(2)).join(','), b.max.toArray().map(x=>x.toFixed(2)).join(',')); }

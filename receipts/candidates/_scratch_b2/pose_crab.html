@@ -1,0 +1,33 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}</script>
+<style>body{margin:0;background:#222}</style></head><body>
+<script type="module">
+import * as THREE from 'three';
+import { ASSET } from '/game/assetlib.js';
+const q = new URLSearchParams(location.search);
+const url = q.get('a'); const W = 400, Hh = 520;
+const r = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+r.setSize(W * 4, Hh); r.setScissorTest(true); document.body.appendChild(r.domElement);
+r.outputColorSpace = THREE.SRGBColorSpace; r.toneMapping = THREE.ACESFilmicToneMapping;
+const scene = new THREE.Scene(); scene.background = new THREE.Color(0x9aa3ab);
+scene.add(new THREE.HemisphereLight(0xcfe3ff, 0x806040, 1.4));
+const sun = new THREE.DirectionalLight(0xfff0d8, 2.4); sun.position.set(3, 5, 4); scene.add(sun);
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(6, 6), new THREE.MeshStandardMaterial({ color: 0x777066 }));
+ground.rotation.x = -Math.PI / 2; scene.add(ground);
+const rest = await ASSET(url, { keepHierarchy: true });
+const posed = await ASSET(url, { keepHierarchy: true });
+const J = posed.userData.joints;
+const missing = ['body','clawL','clawR','legL0','legL1','legL2','legL3','legR0','legR1','legR2','legR3'].filter(k => !J || !J[k]);
+// claws raised, body bob, legs mid-scuttle
+J.clawL.rotation.z += 0.7; J.clawR.rotation.z -= 0.7; J.clawL.rotation.x -= 0.3; J.clawR.rotation.x -= 0.3;
+J.body.position.y += 0.03; J.body.rotation.z = 0.08;
+for (let i = 0; i < 4; i++) { const p = (i % 2 ? 1 : -1) * 0.35; J['legL' + i].rotation.z += p; J['legR' + i].rotation.z += p; J['legL' + i].rotation.y += 0.25 * (i % 2 ? 1 : -1); J['legR' + i].rotation.y -= 0.25 * (i % 2 ? 1 : -1); }
+const box = new THREE.Box3().setFromObject(rest); const h = box.max.y;
+function view(obj, i, cam) { scene.add(obj); r.setViewport(i * W, 0, W, Hh); r.setScissor(i * W, 0, W, Hh); r.render(scene, cam); scene.remove(obj); }
+const C = (x, y, z, ty, fov = 30) => { const c = new THREE.PerspectiveCamera(fov, W / Hh, 0.05, 50); c.position.set(x, y, z); c.lookAt(0, ty, 0); return c; };
+view(rest, 0, C(0.0, h * 2.2, 1.1, h * 0.4, 35));
+view(posed, 1, C(0.0, h * 1.2, 1.0, h * 0.5, 35));
+view(posed, 2, C(0.75, h * 1.6, 0.75, h * 0.5, 35));
+view(posed, 3, C(-0.9, h * 0.6, -0.3, h * 0.5, 35));
+document.title = 'DONE ' + JSON.stringify({ missing, joints: Object.keys(J), h: +h.toFixed(3) });
+</script></body></html>

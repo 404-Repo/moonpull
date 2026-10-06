@@ -39,13 +39,13 @@ canvas { display: block; width: 100%; height: 100%; touch-action: none; }
   border: 1px solid var(--edge); opacity: 0; transition: opacity .35s; }
 #toast.on { opacity: 1; }
 
-#say { position: absolute; left: 50%; bottom: calc(200px + var(--sb)); transform: translateX(-50%); width: min(92vw, 560px); padding: 14px 18px 12px;
-  border-radius: 14px; background: rgba(250, 240, 222, .95); color: #24343a; border: 2px solid rgba(120, 90, 60, .35); display: none;
+#say { position: absolute; left: 50%; bottom: calc(150px + var(--sb)); transform: translateX(-50%); width: min(78vw, 520px); padding: 9px 14px 8px;
+  border-radius: 12px; background: rgba(20, 38, 44, .72); color: #fff8ec; border: 1px solid var(--edge); display: none;
   pointer-events: auto; box-shadow: 0 8px 30px rgba(0, 0, 0, .35); z-index: 30; }
 #say.on { display: block; }
-#sayname { font-size: 11px; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; color: #a5512f; }
-#saytext { font-family: var(--serif); font-size: clamp(16px, 4.2vw, 19px); line-height: 1.4; margin-top: 4px; min-height: 2.6em; }
-#saynext { font-size: 11px; text-align: right; color: #8b7a66; margin-top: 4px; }
+#sayname { font-size: 10px; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; color: #ffb58a; }
+#saytext { font-family: var(--serif); font-size: clamp(14px, 3.7vw, 17px); line-height: 1.35; margin-top: 2px; }
+#saynext { display: none; }
 
 #stickzone { position: absolute; left: 0; bottom: 0; width: 46vw; height: 46vh; pointer-events: auto; touch-action: none; }
 #stick { position: absolute; left: calc(26px + 4vw); bottom: calc(34px + var(--sb)); width: 126px; height: 126px; border-radius: 50%;
@@ -60,9 +60,10 @@ body:not(.touchdev) #stickzone, body:not(.touchdev) #tide .hint { display: none;
 #tiderange { position: absolute; left: 0; right: 0; background: rgba(159, 216, 255, .22); }
 #tidelevel { position: absolute; left: 0; right: 0; bottom: 0; background: linear-gradient(#5fc7d8, #1e6a78); transition: height .08s; }
 #tiderest { position: absolute; left: -6px; right: -6px; height: 2px; background: rgba(255, 245, 225, .9); z-index: 2; }
-#tideknob { position: absolute; left: 7px; width: 60px; height: 60px; margin-top: -30px; border-radius: 50%; top: 50%;
-  background: radial-gradient(circle at 40% 35%, #f4fbff, #9fd8ff 45%, #3d89a8 100%); border: 3px solid rgba(255, 244, 222, .85);
-  box-shadow: 0 0 18px rgba(159, 216, 255, .7), 0 3px 10px rgba(0, 0, 0, .35); }
+#tideknob { position: absolute; left: 9px; width: 56px; height: 56px; margin-top: -28px; border-radius: 50%; top: 50%;
+  background: radial-gradient(circle at 50% 50%, #e9f7ff 0, #9fd8ff 22%, #2b5d6b 48%, #1d3a42 70%);
+  border: 4px solid #b98a45; box-shadow: inset 0 0 0 2px #6b4a22, 0 0 14px rgba(159, 216, 255, .55), 0 3px 8px rgba(0, 0, 0, .4); }
+#tideknob::after { content: ''; position: absolute; left: 50%; top: -12px; width: 18px; height: 12px; margin-left: -9px; border: 3px solid #b98a45; border-bottom: none; border-radius: 10px 10px 0 0; }
 #tideknob.held { box-shadow: 0 0 34px rgba(159, 216, 255, 1), 0 3px 10px rgba(0, 0, 0, .35); }
 #tidelabel { position: absolute; left: 0; right: 0; bottom: -20px; text-align: center; font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: rgba(255, 255, 255, .75); }
 #tide.locked { opacity: .25; }

@@ -53,3 +53,25 @@ Caveats on those numbers: 8 pairs is coarse; round 1's podium frames included se
 Also done: Bellkeeper camera with pitch-then-yaw-swing collision (critic 1 had flagged our camera inside geometry at the wreck); dialogue as non-blocking captions; the dark lighthouse on a shaped sea stack is visible from the harbour as the goal; 46 assets through the 404 loop; harbour music (Atlas, MiniMax Music) plays with gaps because the service returned 21 s for a 75 s request.
 
 Not done or weak: the hero reads as a faceless mannequin from behind (critic 2's second property); the critic has not yet seen the Needle Run; the Stack, the boss and the ending are not built; music for the other places is generating; no jam.mjs run yet.
+
+## Milestone 3: content complete (2026-10-06)
+
+The whole game exists and plays from title to end card. Serving at **:8796**.
+
+**Content**
+- Four places, ten named zones announced on arrival: Gullwick Harbour, The Causeway, Well Islet, The Sand Bar, The Shellflats, The Marguerite, Gull Head, The Needles, The Stack, The Basin.
+- Main story: 22 objective steps. Harbour 8, Shellflats 4, Gull Head 3 (the Needle Run, six gates), the Stack 7: stepping stones on a drowned spine, the Undertow in three phases (lure it with high water, strand it with low water, raise the sea hard so its boat floats off its back, shine the lantern; each phase wants more bait and the ledge is the only safe ground), then the lighthouse is lit in a crane-shot finale (beam, sunset to dusk, moonrise) and an end card with stats and "Keep exploring".
+- Errands in any order, alongside the road: Marta's three pots (deep low tide off the jetty), Pip's toy boat (only a high sea carries it home, a low one sets it down), Bram's spade (by the far weir). 10 more steps, 5 lost things counted on the end card. Total tracked steps 32 (Bellkeeper's measured tally is about 35, inferred).
+- People: Nell, Tam, Marta, Pip, Bram, the Undertow. Title slideshow with three painted prologue cards (Atlas images), pause menu with sound toggle, zone banners.
+- Music: four cues (harbour, flats, boss, finale) from Atlas MiniMax Music, 21 to 45 s each, played with gaps; synthesised surf, gulls and swell.
+- 56 3D assets through the 404 loop; hero v2 (pointed hood, red scarf, bigger pack) after critic 2, plus a warm rim light on the hero only after critic 3.
+
+**Measured (my real multi-touch gate, tools/play.mjs)**
+- Main chain end to end in one run: 20 of 20 gate assertions (every main step plus the end card), 0 console errors, peak ~150-220 draws, 0.1-0.75 M triangles, 390x844 portrait. Bot time 257 s; the bot knows every answer, so a first human play is longer, unmeasured.
+- Errands: Marta and Pip 7 of 7, Bram 3 of 3.
+- Boss route 5 of 5 on two consecutive runs after the shine-reach fix. Before that fix a portrait run failed the boss (0 hits in 420 s): the button radius (30 m) was smaller than the shine radius (36 m), so the prompt never showed for a far exposure. Fixed; flakiness is now unmeasured beyond 2 of 2 runs.
+- `harness/ship.mjs`: 68 modules parse, every path stays inside the folder. Game folder 3.7 MB.
+
+**Critic round 3** (fresh critic, blind, same podium frames as round 2, frames now include the Needle Run and the boss): vs podium **5 of 8** (losses: Bellkeeper's wide square clear, SUNDRIFT clear and slight), vs floor **6 of 6** (3 decisive). The critic says the colour grade is now our strongest property and empty ground is fixed in the harbour and Gull Head but not on the Shellflats. First property it names: the hero's size in frame (8 to 10% of frame height). That conflicts with Ben's instruction to use Bellkeeper's camera (whose hero is about 1/8 of the frame), so I kept the camera and changed the hero instead (v2 silhouette, rim light, lantern-styled dial, lighter captions). Not re-judged yet.
+
+Not done: jam.mjs against a public URL; the Shellflats still give 40 to 60% of some frames to bare sand; the arches read blocky; a human first-play time is unknown.
