@@ -1,0 +1,16 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}</script>
+</head><body><script type="module">
+import * as THREE from 'three';
+import { ASSET } from '/game/assetlib.js';
+const url = new URLSearchParams(location.search).get('a');
+const out = {};
+for (const [k, o] of [['merged', {}], ['merged+surfaces', { surfaces: true }], ['tree+surfaces', { keepHierarchy: true, surfaces: true }]]) {
+  const a = await ASSET(url, o);
+  const hits = []; let meshes = 0;
+  a.traverse((n) => { if (!n.isMesh) return; meshes++; if (n.material.name === 'beacon') hits.push({ name: n.name, emissive: n.material.emissive.getHexString(), map: !!n.material.map, tris: (n.geometry.index ? n.geometry.index.count : n.geometry.attributes.position.count) / 3 }); });
+  out[k] = { meshes, byName: !!a.getObjectByName('beacon'), hits, ud: !!(a.userData.beacon && a.userData.beacon.isMesh) };
+}
+const r = new THREE.WebGLRenderer(); r.setSize(200, 200); document.body.appendChild(r.domElement);
+document.title = 'DONE ' + JSON.stringify(out);
+</script></body></html>

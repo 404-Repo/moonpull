@@ -1,0 +1,5 @@
+# sea_stack_rocks: picked C (2,881 tris, verify ok, 5.15 x 4.28 x 4.60 m)
+C won by eye: the spire is a stack of cleaved chamfered prisms, each tilted on its own bedding plane, with a slab leaning on the right flank and a blunt crown. That is the "stacked angular blocks" read of the reference, and it holds from all four sides (the back shows the stepped blocks and the back boulder, not a flat face). Brown wet footing and low rocks, grey upper stone, barnacle clusters low and mid, moss on ledges and boulder tops, kelp fronds in the joints, pale bird-lime splashes near the top.
+B (faceted lathes, 3,021) is a close second but reads as one smooth cone with rings rather than separate blocks. A (jittered icosahedra, 3,213) reads as a stack of round boulders, a snowman, not a spire.
+All three share one dressing pass (raycast onto the rock surface) and the same layout, so the difference is purely construction.
+Known weakness: the bird-lime is sparse flat splashes rather than the ref's drips and streaks, and the spire tip is cleaner and more regular than the ref's jagged crown. 5 materials (grey, brown, kelp, barnacle cream, lime).

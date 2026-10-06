@@ -1,0 +1,10 @@
+# shore_crab: picked C (2,364 tris, verify ok, 0.495 x 0.345 x 0.278 m)
+
+Revised after the lead's review (legs read spidery): C's legs are now four chunky pieces, a femur going out and slightly up to a knuckle, a tibia angled down and out, and a short dactyl tip after a second knuckle. Pivots moved just under the shell rim to keep the overall width at 0.5 m, and the shell underside now sits about 6 cm off the ground. Joint names, axes and pivot behaviour are unchanged. First pass was 1,916 tris.
+
+C won by eye: its hand-built faceted carapace has a crisp crenellated front margin, a darker rim band and raised lobes, so the shell reads as a chunky bevelled crab shell from every side and sits with the flat-shaded harbour kit; the faceted claws (pale inner palm, two wedge fingers) read as pincers in the pose proof, and it stays under budget (eight on screen = ~19k tris). A (primitives, 2,476) has the smoothest dome, closest to the painted ref, but its cone fingers read as horns and it sits at the budget line. B (lathe dome + extruded chela outlines, 2,548, over budget) had the worst claws: flat extruded paddles from the side, and its barnacles sank into the dome.
+Joints proven: pose_proof_c.png (and pose_proof_a.png) load through game/assetlib.js ASSET(url, {keepHierarchy:true}) via _scratch_b2/pose_crab.html; missing list empty. Every joint is a Group at its pivot on the shell edge, parented under body (body bob carries legs and claws).
+- Claw raise: rotation.z, positive on clawL (+X side), negative on clawR. 0.7 rad lifts the claw straight up from the shell corner with no tearing.
+- Leg lift: rotation.z (positive lifts legL*, negative lifts legR*). Leg swing fore/aft: rotation.y (rest yaw is baked: front legs point forward, rear legs back, so add to it, do not set it).
+- body: translate/rotate for bob and tilt.
+Known weakness: from a pure side view the tibias still read fairly upright, and the posed legs lift the whole limb rather than bending at the knee (one joint per leg). The shell is faceted and flat-shaded where the reference is painted smooth.
