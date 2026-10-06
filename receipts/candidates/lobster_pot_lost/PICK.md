@@ -1,0 +1,4 @@
+# lobster_pot_lost: A (adapted lobster_pot primitives), 1,449 tris
+Verify: ok, 0.842 x 0.40 x 0.76 m against a 0.6 m pot depth (tolerance 0.3, the float and kelp trail past the cage), clean.
+Won by eye: it is visibly the same willow D-hoop cage as game/assets/lobster_pot.js, so the pair reads as one set, then tipped on its side rail with a snapped hoop, two broken rods, kelp blades draped over and trailing to the sand, rope wound round it and a cracked red float with a loose shard. From the game camera it reads as a toppled cage with a red dot. B (lathed round inkwell creel) reads as a wicker ball and missed its size by 36%. C (slatted box creel) has crude lid hoops and reads as a crate.
+Known weakness: the float's crack faces away in the front views, so from some angles it reads as a whole buoy; 1,449 tris is close to the 1,500 cap.
