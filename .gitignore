@@ -4,3 +4,4 @@ _jam/
 _verify/
 *.png.tmp
 tools/node_modules
+ref/**/*.png
