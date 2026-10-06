@@ -9,7 +9,7 @@ const ZONES = [
   { n: 'Gull Head', s: 'the landing under the cliffs', x: 101, z: -6, r: 12 },
   { n: 'The Needles', s: 'arches over, reefs under', x: 138, z: -60, r: 22 },
   { n: 'The Stack', s: 'the old light', x: 206, z: -22, r: 16 },
-  { n: 'The Basin', s: 'where the Undertow waits', x: 220, z: -50, r: 12 },
+  { n: 'The Basin', s: 'where the Undertow waits', x: 222, z: -49, r: 9 },
 ];
 export function initZones(player) {
   const el = document.getElementById('zone'); let shown = new Set(), t = 0, cur = null;

@@ -205,8 +205,8 @@ function frame() {
   lanternLight.intensity = tide.locked ? 0 : 1.6 + Math.min(2.5, Math.abs(tide.speed) * 3);
   SEA.uSea.value = tide.level; SEA.uWet.value = tide.wet; SEA.uTime.value = t;
   sea.position.y = tide.level;
-  if (ctx.boss && ctx.boss.active) { cam.aim = cam.aim || new THREE.Vector3(); cam.aim.set(ctx.boss.x, 0, ctx.boss.z); cam.extraArm = 1.5; cam.extraPitch = -0.02; }
-  else if (cam.aim) { cam.aim = null; cam.extraArm = 0; cam.extraPitch = 0; }
+  if (ctx.boss && ctx.boss.active) { cam.aim = cam.aim || new THREE.Vector3(); cam.aim.set(ctx.boss.x, 0, ctx.boss.z); cam.extraArm = 1.0; cam.extraPitch = -0.25; }
+  else if (cam.aim && !ctx.boatAim) { cam.aim = null; cam.extraArm = 0; cam.extraPitch = 0; }
   if (!(ctx.finaleUpdate && ctx.finaleUpdate(dt))) cam.update(dt, player.pos, player.vel, input.look);
   if (window.__VIEW__) { const v = window.__VIEW__; camera.position.set(v[0], v[1], v[2]); camera.lookAt(v[3], v[4], v[5]); }
   if (window.__TIDE__ !== undefined) { tide.level = tide.target = window.__TIDE__; }

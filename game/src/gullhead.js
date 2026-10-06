@@ -87,6 +87,7 @@ export async function buildGullHead(ctx) {
     run.s = Math.max(0, Math.min(1, next));
     const p = curve.getPointAt(run.s), d = curve.getTangentAt(run.s);
     boat.position.set(p.x, tide.level - KEEL + Math.sin(t * 1.4) * 0.06, p.z);
+    if (ctx.cam.aim) { const q = curve.getPointAt(Math.min(1, run.s + 0.06)); ctx.cam.aim.set(q.x, 0, q.z); }
     boat.rotation.set(Math.sin(t * 1.1) * 0.03, Math.atan2(d.x, d.z), Math.sin(t * 0.9) * 0.04 + run.speed * 0.004);
     // the girl and Tam ride on the deck
     tamSeat.set(-0.5, 0.95, -2.2).applyEuler(boat.rotation).add(boat.position);
@@ -94,7 +95,7 @@ export async function buildGullHead(ctx) {
     const me = new THREE.Vector3(0.3, 0.95, 1.2).applyEuler(boat.rotation).add(boat.position);
     player.pos.copy(me); player.root.position.copy(me); player.yaw = boat.rotation.y; player.root.rotation.y = player.yaw;
     if (run.s >= 0.999 && !run.done) {
-      run.done = true; run.on = false; player.riding = false; ctx.cam.extraArm = 0; ctx.cam.extraPitch = 0;
+      run.done = true; run.on = false; player.riding = false; ctx.cam.extraArm = 0; ctx.cam.extraPitch = 0; ctx.cam.aim = null; ctx.boatAim = false;
       player.place(HEAD.end.x, HEAD.end.z, player.yaw); player.vel.set(0, 0, 0);
       boat.position.set(HEAD.end.x - 3, tide.level - KEEL, HEAD.end.z - 6);
       tam.root.position.set(HEAD.end.x - 1.5, world.terrain(HEAD.end.x - 1.5, HEAD.end.z + 1.5), HEAD.end.z + 1.5);
@@ -116,7 +117,7 @@ export async function buildGullHead(ctx) {
   S.step({ place: P, text: 'Climb aboard Tam\'s boat',
     use: { x: HEAD.landing.x, z: HEAD.landing.z, r: 5, label: 'Board' },
     onUse(done) {
-      run.on = true; run.s = 0; run.speed = 0; player.riding = true; ctx.cam.extraArm = 5; ctx.cam.extraPitch = 0.05;
+      run.on = true; run.s = 0; run.speed = 0; player.riding = true; ctx.cam.extraArm = -1.8; ctx.cam.extraPitch = -0.17; ctx.cam.aim = new THREE.Vector3(); ctx.boatAim = true;
       hud.toast('Keep the sea inside the bright band on the lantern', 5);
       done();
     } });

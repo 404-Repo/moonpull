@@ -5,7 +5,7 @@ const browser = await puppeteer.launch({ headless: 'new', args: ['--enable-gpu',
 const page = await browser.newPage();
 await page.setViewport({ width: 1280, height: 640, deviceScaleFactor: 1 });
 page.on('pageerror', (e) => console.log('ERR', e.message));
-await page.goto('http://localhost:8796/?autostart', { waitUntil: 'load' });
+await page.goto('http://localhost:8796/?autostart' + (process.env.Q || ''), { waitUntil: 'load' });
 await page.waitForFunction('window.__READY__ === true');
 let i = 0;
 for (const v of vs) {

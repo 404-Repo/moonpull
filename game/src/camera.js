@@ -28,7 +28,7 @@ export class FollowCam {
     // the worst intrusion of ground along the boom, in metres
     const cp = Math.cos(pitch), sp = Math.sin(pitch);
     let worst = 0;
-    for (let k = 0.35; k <= 1.0001; k += 0.13) {
+    for (let k = 0.3; k <= 1.0001; k += 0.06) {
       const x = fx + Math.sin(this.yaw) * cp * arm * k, z = fz + Math.cos(this.yaw) * cp * arm * k, y = fy + sp * arm * k;
       let g = this.ground(x, z);
       if (this.blockers) g = Math.max(g, this.blockers(x, z));
@@ -57,20 +57,18 @@ export class FollowCam {
     f.x += Math.sin(this.yaw) * 0.8; f.z += Math.cos(this.yaw) * 0.8;
     if (instant) this.focus.copy(f); else this.focus.lerp(f, 1 - Math.exp(-7 * dt));
 
-    // pitch first, then arm, to keep the ground and solids out of the lens
+    // keep the ground and solids out of the lens: swing yaw a little first (cheap and keeps the
+    // framing), then raise the pitch, then shorten the arm
     let wantPitch = PITCH + this.extraPitch, wantArm = this.baseArm + this.extraArm;
-    for (let i = 0; i < 6 && this.clearance(this.focus.x, this.focus.y, this.focus.z, wantPitch, wantArm) > 0; i++) wantPitch = Math.min(0.96, wantPitch + 0.08);
-    // still blocked: swing yaw toward the nearest clear side before giving up arm
-    if (this.clearance(this.focus.x, this.focus.y, this.focus.z, wantPitch, wantArm) > 0) {
-      const y0 = this.yaw;
-      for (const off of [0.35, -0.35, 0.7, -0.7, 1.1, -1.1]) {
-        this.yaw = y0 + off;
-        const ok = this.clearance(this.focus.x, this.focus.y, this.focus.z, wantPitch, wantArm) <= 0;
-        this.yaw = y0;
-        if (ok) { this.yaw = y0 + off * Math.min(1, dt * 2.5); break; }
-      }
+    const blocked = () => this.clearance(this.focus.x, this.focus.y, this.focus.z, wantPitch, wantArm) > 0;
+    if (blocked()) {
+      const y0 = this.yaw; let best = null;
+      for (const off of [0.3, -0.3, 0.6, -0.6, 0.9, -0.9]) { this.yaw = y0 + off; if (!blocked()) { best = off; break; } }
+      this.yaw = y0;
+      if (best !== null) this.yaw = y0 + best * Math.min(1, dt * 3);
     }
-    for (let i = 0; i < 8 && this.clearance(this.focus.x, this.focus.y, this.focus.z, wantPitch, wantArm) > 0 && wantArm > 4.5; i++) wantArm = Math.max(4.5, wantArm - 1.0);
+    for (let i = 0; i < 6 && blocked(); i++) wantPitch = Math.min(0.96, wantPitch + 0.08);
+    for (let i = 0; i < 8 && blocked() && wantArm > 4.5; i++) wantArm = Math.max(4.5, wantArm - 1.0);
     if (instant) { this.pitch = wantPitch; this.arm = wantArm; }
     else {
       this.pitch += (wantPitch - this.pitch) * (1 - Math.exp(-(wantPitch > this.pitch ? 12 : 2.4) * dt));

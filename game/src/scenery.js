@@ -14,7 +14,7 @@ export async function buildScenery(ctx) {
   scene.add(beamLight);
   ctx.beaconLight = beamLight;
   // reefs scattered off the Stack and round Gull Head
-  for (const [x, z, r] of [[198, -40, 0.4], [236, -44, 2.1], [206, -84, 1.2], [-70, -60, 1.0], [-140, -40, 2.0], [10, -100, 0.6]]) {
+  for (const [x, z, r] of [[200, -44, 0.4], [206, -84, 1.2], [-70, -60, 1.0], [-140, -40, 2.0], [10, -100, 0.6]]) {
     await put('sea_stack_rocks', x, z, { rot: r });
     world.solid({ x, z, r: 2.4 });
   }

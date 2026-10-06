@@ -1,0 +1,10 @@
+import puppeteer from 'puppeteer';
+const browser = await puppeteer.launch({ headless: 'new', args: ['--enable-gpu','--ignore-gpu-blocklist'] });
+const page = await browser.newPage();
+await page.setViewport({ width: 390, height: 844, deviceScaleFactor: 1, isMobile: true, hasTouch: true });
+await page.goto('http://localhost:8796/?autostart&step=17&at=220,-54', { waitUntil: 'load' });
+await page.waitForFunction('window.__READY__ === true');
+await new Promise(r=>setTimeout(r,6000));
+console.log(await page.evaluate(()=>{const D=__DEV__;const c=D.cam.cam;const ray=new D.THREE.Raycaster();ray.setFromCamera(new D.THREE.Vector2(-0.3,0),c);const hits=ray.intersectObjects(D.scene.children,true).slice(0,3).map(h=>[h.object.name||h.object.type,h.object.parent&&h.object.parent.name,h.distance.toFixed(1),h.object.material&&h.object.material.name]);return JSON.stringify({cam:[c.position.x.toFixed(1),c.position.y.toFixed(1),c.position.z.toFixed(1)],p:[D.player.pos.x,D.player.pos.y,D.player.pos.z],hits})}));
+await page.screenshot({path:'/private/tmp/claude-501/-Users-atlas/b41d2d72-1f23-42d4-a1af-a08304467058/scratchpad/d5.jpg'});
+await browser.close();

@@ -95,11 +95,11 @@ seg(96, 4, 118, -18, -0.6, -1.0, 2.5, 3);
 disc(124, -26, 6, -1.0, 4);
 
 // THE STACK. Stepping stones to the sea stack, the stack itself, the tidal basin arena.
-seg(194, 0, 216, -44, -1.75, -1.75, 1.6, 2.5);                 // the drowned spine the stones stand on
-for (let i = 0; i < 7; i++) disc(196 + i * 3.2, -6 - i * 6.2, 1.8, -1.2 + (i % 2) * 0.3, 1.2);
-disc(220, -60, 13, 3.0, 6);                                    // basin floor around the stack foot
+seg(194, 0, 210, -42, -1.75, -1.75, 1.6, 2.5);                 // the drowned spine the stones stand on
+for (let i = 0; i < 7; i++) disc(195.5 + i * 2.4, -5 - i * 5.6, 1.8, -1.2 + (i % 2) * 0.3, 1.2);
+disc(220, -51, 10, 3.0, 6);                                    // the ledge under the lighthouse
+disc(240, -36, 13, -0.6, 8, 'raise');                          // the basin sand, dry only at low water
 FEATURES.push({ k: 'stack', x: 220, z: -72, r: 7.5, h: 27 });          // the stack
-disc(218, -50, 18, -0.6, 8, 'raise');                          // the arena sand at low tide
 
 function applyFeature(f, x, z, h) {
   if (f.k === 'stack') {

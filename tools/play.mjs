@@ -155,12 +155,12 @@ if (ROUTE === 'head' || ROUTE === 'all' || ROUTE === 'late') {
 }
 if (ROUTE === 'stack' || ROUTE === 'all' || ROUTE === 'late') {
   await dial(-1); await waitTide((t) => t < -1.8, 15000);
-  for (const [x, z] of [[196, -6], [202, -18], [209, -31], [215, -43]]) await walk(x, z, { r: 2.2, snapEvery: 3000, name: 'stones', during: async () => dial(-1) });
+  for (const [x, z] of [[196, -6], [200, -16], [205, -29], [210, -42]]) await walk(x, z, { r: 2.2, snapEvery: 3000, name: 'stones', during: async () => dial(-1) });
   await expectStep(16, 'crossed the stepping stones');
-  await walk(220, -54, { r: 2, during: async () => dial(-1) });
+  await walk(221, -48, { r: 2, during: async () => dial(-1) });
   await dialOff();
   await expectStep(17, 'climbed onto the ledge (boss wakes)');
-  const end = Date.now() + 240000; let lastSnap = 0, phaseT = Date.now();
+  const end = Date.now() + 420000; let lastSnap = 0, phaseT = Date.now();
   while (Date.now() < end) {
     const g = await G();
     if (g.step >= 20) break;
@@ -175,7 +175,7 @@ if (ROUTE === 'stack' || ROUTE === 'all' || ROUTE === 'late') {
   }
   await dialOff();
   await expectStep(20, 'beat the Undertow three times');
-  await walk(220, -61, { r: 1.5 });
+  await walk(220, -57.5, { r: 1.2 });
   await use();
   await sleep(18000); await snap('finale');
   await expectStep(21, 'lit the lamp');

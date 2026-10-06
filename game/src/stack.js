@@ -8,8 +8,8 @@ import { hud } from './hud.js';
 import { mergePerJoint } from './rigmerge.js';
 
 export const STACK = {
-  stones: { x: 215, z: -43 }, arena: { x: 218, z: -42 }, ledge: { x: 220, z: -56 },
-  door: { x: 220, z: -62.5 }, lair: { x: 232, z: -18 },
+  stones: { x: 210, z: -42 }, arena: { x: 240, z: -36 }, ledge: { x: 222, z: -49 },
+  door: { x: 220, z: -59.5 }, lair: { x: 252, z: -12 },
 };
 
 export async function buildStack(ctx) {
@@ -21,8 +21,10 @@ export async function buildStack(ctx) {
   const st = await ctx.put('cliff_stairs', S.door.x, S.door.z - 4.5, { rot: 0, raw: true });
   if (st) st.position.y = T(S.door.x, S.door.z) - 0.2;
   for (const dx of [-2.2, 2.2]) await ctx.put('lamp_post', S.door.x + dx, S.door.z + 0.5, { rot: Math.PI });
-  await ctx.put('anchor', S.ledge.x - 6, S.ledge.z + 2, { rot: 2.2 });
-  await ctx.put('net_rack', S.ledge.x + 6, S.ledge.z - 1, { rot: -0.6 });
+  // the old keeper's yard on the ledge: broken walls, boulders round the rim, gorse
+  for (const [x, z, r] of [[213, -57, 0.6], [228, -57, -0.5]]) await ctx.put('stone_wall', x, z, { rot: r });
+  for (let i = 0; i < 7; i++) { const a = 2.0 + i * 0.45, x = 220 + Math.cos(a) * 11, z = -51 + Math.sin(a) * 11; await ctx.put('sea_rock', x, z, { rot: i, scale: 0.7 + (i % 3) * 0.25, foot: 1.2 }); }
+  for (const [x, z] of [[214, -55], [226, -55], [216, -58], [225, -58]]) await ctx.put('shrub_clump', x, z, { rot: x });
   // --- the Undertow ---------------------------------------------------------------------------
   const B = { hp: 3, phase: 0, state: 'asleep', x: S.lair.x, z: S.lair.z, yaw: Math.PI, t: 0, strandT: 0, exposedT: 0,
     rise0: 0, riseT: 0, attackT: 0, active: false, y: -12, lives: 3, shellAway: 0 };
@@ -45,7 +47,7 @@ export async function buildStack(ctx) {
     bar.querySelectorAll('i').forEach((p, k) => p.classList.toggle('gone', k >= B.hp));
   };
 
-  const inArena = (x, z) => Math.hypot(x - S.arena.x, z - S.arena.z) < 17;
+  const inArena = (x, z) => Math.hypot(x - S.arena.x, z - S.arena.z) < 15;
   const dryAt = (x, z) => tide.level < T(x, z) + 0.15;
   const say = (who, line) => hud.say([[who, line]]);
   let shineReady = false;
@@ -90,11 +92,11 @@ export async function buildStack(ctx) {
       // drags itself toward the water; a fast rise lifts the boat off its back
       speed = 0.5; tx = S.lair.x; tz = S.lair.z;
       if (tide.speed > 0.5) { if (B.riseT <= 0) B.rise0 = tide.level; B.riseT += dt; } else B.riseT = 0;
-      if (B.riseT > 0 && tide.level - B.rise0 > 1.6) { B.state = 'exposed'; B.t = 0; sfx.chime(); say('Nell', 'The boat lifted off! Shine the lantern on it, now!'); shellFloat = { y: 0, vx: (Math.random() - 0.5) * 2, vz: 2.2 }; }
+      if (B.riseT > 0 && tide.level - B.rise0 > 1.6) { B.state = 'exposed'; B.t = 0; sfx.chime(); say('Nell', 'The boat lifted off! Shine the lantern on it, now!'); shellFloat = { y: 0, vx: (Math.random() < 0.5 ? -1 : 1) * 3.0, vz: 3.2 }; }
       if (!dryAt(B.x, B.z) && B.t > 1.5 && tide.speed <= 0.5) { B.state = 'hunt'; B.t = 0; }
     } else if (B.state === 'exposed') {
       speed = 0.2; tx = S.lair.x; tz = S.lair.z;
-      shineReady = Math.hypot(px - B.x, pz - B.z) < 26;
+      shineReady = Math.hypot(px - B.x, pz - B.z) < 36;
       if (B.t > 8) { B.state = 'regain'; B.t = 0; say('Nell', 'Too slow. It has its boat back.'); }
     } else if (B.state === 'hit') {
       if (B.t > 2.5) { B.state = 'regain'; B.t = 0; }
@@ -128,7 +130,7 @@ export async function buildStack(ctx) {
     if (shell) {
       shell.userData.p0 ??= shell.position.clone();
       if (shellFloat) {
-        shellFloat.y = Math.min(shellFloat.y + dt * 1.2, 2.2);
+        shellFloat.y = Math.min(shellFloat.y + dt * 1.6, 3.4);
         shell.position.set(shell.userData.p0.x + shellFloat.vx * Math.min(B.t, 3) * 0.6, shell.userData.p0.y + shellFloat.y + Math.sin(t * 1.5) * 0.2, shell.userData.p0.z - shellFloat.vz * Math.min(B.t, 3) * 0.6);
         shell.rotation.z = Math.sin(t) * 0.1;
       } else { shell.position.lerp(shell.userData.p0, Math.min(1, dt * 3)); shell.rotation.z *= 0.9; }
