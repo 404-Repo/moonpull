@@ -1,0 +1,1 @@
+Picked barrel_b (2612 tris): lathe-slice staves give a true curved belly with visible stave seams and hoops that follow the bulge; A's two-box staves kink at the belly, C was smooth (seams barely read) and over budget at 3340.

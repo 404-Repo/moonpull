@@ -1,0 +1,2 @@
+Winner: fishing_boat_c (hand-built clinker BufferGeometry hull). Only candidate where the strake seams read from the raised camera, plus planked cabin with door and four windows, net with floats, anchor and rudder; a was faceted plank boxes, b a smooth lathe with a plain wheelhouse.
+5,026 tris, over the 3,000 prop budget but under 6,000: the cabin planking and deck fittings are what make it read at boat scale.

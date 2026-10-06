@@ -1,0 +1,1 @@
+Winner: rowboat_c (hand-built clinker hull, red strakes outside, timber lining inside). Clearest stepped strakes and the most structure (swept ribs, bottom boards, three thwarts, two oars); a was faceted, b was smooth with no readable plank lines.

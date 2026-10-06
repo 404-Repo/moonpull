@@ -1,0 +1,1 @@
+Picked rope_post_c (1388 tris): hewn post with rounded crown, dark tide-soaked foot, torn kelp skirt and scattered barnacle clusters reads like the reference from every side. Body is 0.22 m per the lock; rope wraps and tail make the overall footprint 0.33 x 0.41 m, so the expect file states 0.32 width.

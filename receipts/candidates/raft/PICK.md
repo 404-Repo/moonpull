@@ -1,0 +1,1 @@
+Winner: raft_a (primitives). Closest to the reference: ringed log ends, corner rope wraps, staggered plank ends, bollard and coil, and the only one inside the 3,000 tri budget (2,660); c (planks along the logs) lost the woven lashings to the camera, b cost 6,800 tris for the same look.

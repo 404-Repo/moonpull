@@ -1,0 +1,1 @@
+Picked lobster_pot_a (2096 tris): square grid of half hoops and long rods, inset funnel ring with spokes and trailing rope matches the reference cage; B's lattice back panel lost most holes, C's diamond weave is pretty but not the reference's grid.

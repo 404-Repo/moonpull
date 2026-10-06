@@ -1,0 +1,1 @@
+Picked crate_b (1624 tris): closed chamfered extruded slats, dark corner battens with nail heads and sagging tube rope handles read closest to the reference crate; A was flatter, C (open slats + diagonal brace) is a different crate.

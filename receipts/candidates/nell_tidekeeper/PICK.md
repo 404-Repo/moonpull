@@ -1,0 +1,3 @@
+# nell_tidekeeper: C (deeper hunch, bigger head, faceted bell coat), 6,988 tris
+Won by eye: it's the only one that reads as stooped from the game camera, and the bigger head and heavy-lidded face hold up at distance. B's lathe head left the hair cap floating, so she read as bald. A was clean but too upright.
+Joints proven: pose_proof_c.png is loaded through ASSET(url, {keepHierarchy:true}) in a +-0.5 rad stride. Limbs pivot at the hip, knee, shoulder and elbow without tearing. The staff is part of rightLowerArm and swings with it. In that exaggerated test swing it passes the face, so animate her staff arm with less swing.
