@@ -15,6 +15,7 @@ import { initAudio, sfx } from './audio.js';
 import { buildHarbour, HARBOUR } from './harbour.js';
 import { buildFlats, FLATS } from './flats.js';
 import { buildScenery } from './scenery.js';
+import { dressHarbour } from './dress.js';
 
 const $ = (id) => document.getElementById(id);
 const Q = new URLSearchParams(location.search);
@@ -58,6 +59,7 @@ async function put(slug, x, z, o = {}) {
   if (o.foot) for (let a = 0; a < 8; a++) gy = Math.min(gy, terrainH(x + Math.cos(a * 0.785) * o.foot, z + Math.sin(a * 0.785) * o.foot));
   obj.position.set(x, o.raw ? 0 : gy + (o.y || 0), z);
   obj.rotation.y = o.rot || 0;
+  if (o.scale) obj.scale.multiplyScalar(o.scale);
   (o.raw ? scene : statics).add(obj);
   return obj;
 }
@@ -96,6 +98,8 @@ await buildHarbour(ctx);
 progress(0.6, 'draining the flats');
 await buildFlats(ctx);
 await buildScenery(ctx);
+progress(0.8, 'hanging out the washing');
+await dressHarbour(ctx);
 progress(0.9, 'the tide is turning');
 // static scenery merged by material: one bake per area keeps culling useful
 {
