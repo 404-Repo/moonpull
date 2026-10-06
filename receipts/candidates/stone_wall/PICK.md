@@ -1,0 +1,1 @@
+Picked stone_wall_b (2284 tris): five running-bond courses of heavily chamfered pillow stones on a dark core with thick capstones, closest to the reference's rounded chunky courses. A (InstancedMesh dodecahedra) reads as faceted crystals; C (noise lumps) was softer but jumbled. Three sections rendered end to end show no visible joint.

@@ -1,0 +1,1 @@
+Picked flower_planter_b (2709 tris): plank window box with extruded rim frame and front brackets, a dense mound of lobed leaf shapes over a low leaf mass, trailing leaf strings off the front and ends, and twelve red geranium heads on stems. A was over budget (3452) and sparser; C's blob bush reads as a hedge, not geraniums.

@@ -1,0 +1,1 @@
+Picked laundry_line_b (1518 tris): garments cut as silhouettes (T-shirt, striped towel in bands, sheet with ragged hem, long-sleeved jumper, rag) bent in z, scaled 1.25x so they fill the 4 m span like the reference, tube rope with lashings, hewn posts on cobble pads. A's plane garments were boxier; C (folded over the line) had volume but lost the garment shapes.

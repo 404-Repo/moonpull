@@ -1,0 +1,1 @@
+Picked market_stall_b (5910 tris): half-timbered plaster booth on a stone plinth, gable tile roof, and the closest awning to the reference: red / cream stripes that belly between the beams and end in a scalloped valance; plank counter with five crates of fish on ice, three lanterns. A (flat slat awning) was close; C was over budget (7708) with busy tile courses.

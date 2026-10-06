@@ -1,0 +1,1 @@
+Picked net_rack_b (2762 tris): two separate nets folded over the bar (long front fall, short back fall), dense diamond mesh of flat cord ribbons, a sagging swag between them and cork floats on the hems read closest to the reference; A's single curtain reads as a hammock, C's solid sheet reads as cloth, not net.
