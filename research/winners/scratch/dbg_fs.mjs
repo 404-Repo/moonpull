@@ -1,0 +1,11 @@
+import puppeteer from 'puppeteer';
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const browser = await puppeteer.launch({ headless: false, defaultViewport: null, args: ['--window-size=410,980'] });
+const page = (await browser.pages())[0];
+await page.setViewport({ width: 390, height: 844, deviceScaleFactor: 2, isMobile: true, hasTouch: true });
+await page.goto('https://farseek.rapidoai.dev/');
+await page.waitForSelector('#startb', { visible: true, timeout: 90000 }); await sleep(1500);
+await page.touchscreen.tap(...await page.$eval('#startb', e => { const b = e.getBoundingClientRect(); return [b.x + b.width / 2, b.y + b.height / 2]; }));
+await sleep(9000);
+console.log(await page.evaluate(() => [...document.querySelectorAll('#touch [data-touch]')].map(b => { const r = b.getBoundingClientRect(); const top = document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2); return [b.dataset.touch, b.className, Math.round(r.x), Math.round(r.y), Math.round(r.width), top && (top.id || top.className || top.tagName)]; })));
+await browser.close();

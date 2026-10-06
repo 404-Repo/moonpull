@@ -23,7 +23,7 @@ Scope (four places, one coast):
 The bar, measured from the podium (WINNERS.md): 8+ named zones, 35+ objective steps with one branch, a named guide NPC, a 3-phase climax with a finale and end card, 12+ minutes, Bellkeeper camera, 60 fps with 450 or fewer draws on a phone. My current plan has about 20 main steps, so the content phase must add side errands (villagers' tide requests, things the low tide reveals) to clear 35.
 
 Already done beyond the concept, measured:
-- 31 assets through the 404 loop (3 candidates each, verify sheet, pick by eye), in `game/assets/`, receipts in `receipts/candidates/`.
+- 22 assets through the 404 loop (3 candidates each, verify sheet, pick by eye), in `game/assets/`, receipts in `receipts/candidates/`.
 - Engine: one heightfield coast, sea and ground shaders reading the same height texture (foam line, wet sand that stays wet after the sea leaves, cobbled paths), tide model, wading and "carried back to dry ground", floaters (boats, rafts, the well bucket), story engine.
 - Harbour objective chain played end to end by my own real multi-touch gate (`tools/play.mjs`: stick and tide dial held at once through CDP): **8 of 8 steps PASS**, 0 console errors, 114-125 draws, 0.34-0.39 M triangles on an 844x390 phone viewport (headless GPU, 60 fps reported, not a phone).
 - Floor build (one agent, one pass, no loop): `floor/`, frames in `floor/_frames/`.

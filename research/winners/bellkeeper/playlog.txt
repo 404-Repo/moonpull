@@ -1,0 +1,40 @@
+[1.0s] loaded https://tylerdurdeth.github.io/the-last-bellkeeper/
+[2.7s] frame 01_title.jpg
+[3.1s] tap #startb "Start adventure"
+[4.7s] tap #storyNext "Continue the story →"
+[5.7s] tap #storyNext "Continue the story →"
+[6.6s] frame 02_prologue.jpg
+[6.7s] tap #storyNext "Enter Bellhollow →"
+[13.6s] frame 03_intro.jpg
+[13.7s] tap #skipIntro "Skip · or move to begin"
+[16.2s] frame 04_start.jpg
+[17.2s] fps 72
+[17.3s] telemetry {"pos":[-7.931841908332258,18.68624852508454],"y":0,"yaw":0.662710272684869,"ctx":null,"ctxLabel":null,"obj":"Ring the morning bell","area":"terrace","draws":309,"tris":670319,"fps":72.47330776693369,"charged":false} start polar guess [-7.931841908332257,18.68624852508454]
+[17.3s] area=terrace objective="Ring the morning bell" caption="Mara: “Morning round, apprentice. Ring the bell by the path.”" draws=309 tris=670319 fps=72.47330776693369
+[17.9s] frame 05_play.jpg
+[18.6s] action ring: Ring the morning bell
+[21.1s] area=terrace objective="Watch Mara’s bypass lever" caption="A dull, broken note. Mara: “That bell hasn’t sung properly in years.”" draws=284 tris=616761 fps=71.52509507867816
+[21.1s] waypoint 1 reached at -10.5,12.0 y=0.0
+[21.8s] area=terrace objective="Take the bell staff from Mara" caption="Mara throws her bypass lever. A gust puffs from her copper outlet. “Take my staff, apprentice.”" draws=284 tris=617295 fps=73.14414508077171
+[45.2s] frame 06_play.jpg
+[61.2s] action talk: Take the bell staff from Mara
+[63.7s] area=terrace objective="Catch the gust at Mara’s copper outlet" caption="Mara hands you her bell staff. “Catch the gust at my outlet. Give it to the seed wheel.”" draws=288 tris=631497 fps=71.72174876675072
+[63.8s] action catch: Catch the gust
+[66.3s] area=terrace objective="Give the gust to the seed wheel" caption="The gust curls into your bell. Give it to the seed wheel by the gate." draws=300 tris=635889 fps=72.14747929815304
+[66.3s] waypoint 2 reached at -20.6,6.0 y=0.0
+[66.3s] waypoint 3 reached at -20.6,6.0 y=0.0
+[71.5s] action give: Give the gust to the seed wheel
+[74.0s] area=terrace objective="Catch the seed wheel’s gust past the gate" caption="The seed wheel spins. The gate swings open, laundry lifts, pinwheels turn. The wheel puffs a gust beyond the gate." draws=259 tris=562905 fps=71.73036254174293
+[74.6s] frame 07_play.jpg
+[74.6s] waypoint 4 reached at -20.8,3.2 y=0.0
+[75.2s] waypoint 5 reached at -20.6,0.2 y=0.0
+[75.8s] waypoint 6 reached at -23.2,0.9 y=0.0
+[87.7s] skip waypoint, stuck
+[101.5s] frame 08_play.jpg
+[128.6s] frame 09_play.jpg
+[155.5s] frame 10_play.jpg
+[182.5s] frame 11_play.jpg
+[209.7s] frame 12_play.jpg
+[236.5s] frame 13_play.jpg
+[257.5s] final telemetry {"pos":[-27.048869798579414,1.339916986028888],"y":0,"yaw":8.702793644257545,"ctx":null,"ctxLabel":null,"obj":"Catch the seed wheel’s gust past the gate","area":"terrace","draws":254,"tris":561593,"fps":73.04994730254452,"charged":false}
+[257.6s] frame 14_final.jpg

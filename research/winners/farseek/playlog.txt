@@ -1,0 +1,73 @@
+[1.0s] loaded https://farseek.rapidoai.dev/
+[4.6s] frame 01_title.jpg
+[4.7s] tap #startb "New game"
+[13.7s] frame 02_start.jpg
+[14.7s] fps 73
+[14.7s] objective="Find the first expedition" sub="Their camp is on this terrace: search it" prompt="" hint=""
+[15.4s] frame 03_play.jpg
+[18.3s] tele {"where":"court","step":"camp","state":"ground","draws":442,"tris":371310,"fps":73,"pos":[23.084137099607826,38.97296923936685]} marker {"x":19.5,"y":480.3999938964844,"d":"2 m"}
+[19.0s] tele {"where":"court","step":"camp","state":"ground","draws":457,"tris":378801,"fps":71,"pos":[20.19018919217823,39.24010801175518]} marker {"x":370.5,"y":447.79998779296875,"d":"2 m"}
+[24.0s] tele {"where":"court","step":"camp","state":"ground","draws":441,"tris":371882,"fps":70,"pos":[23.080973430778,38.97311847587218]} marker {"x":19.5,"y":480.79998779296875,"d":"2 m"}
+[29.1s] tele {"where":"court","step":"camp","state":"ground","draws":452,"tris":377369,"fps":71,"pos":[21.34891270336629,38.870748690351185]} marker {"x":370.5,"y":559.2999877929688,"d":"2 m"}
+[30.6s] use: Use Read the expedition's notes
+[32.1s] after use step=camp
+[32.8s] use: Use Read the expedition's notes
+[34.3s] notes open
+[34.3s] frame 04_notes.jpg
+[37.8s] after use step=gap
+[37.8s] objective="Follow the expedition down into the court" sub="Jump the gap to the west platform" prompt="Use Read the expedition's notes" hint=""
+[38.5s] use: Use Read the expedition's notes
+[40.0s] notes open
+[40.1s] frame 05_notes.jpg
+[43.5s] after use step=gap
+[44.2s] use: Use Read the expedition's notes
+[45.7s] notes open
+[45.8s] frame 06_notes.jpg
+[49.2s] after use step=gap
+[50.0s] frame 07_play.jpg
+[53.6s] use: ←→ shimmy · ↑ climb · Hang let go
+[55.1s] after use step=drop
+[55.4s] use: ←→ shimmy · ↑ climb · Hang let go
+[56.9s] after use step=drop
+[57.3s] use: ←→ shimmy · ↑ climb · Hang let go
+[58.8s] after use step=drop
+[59.1s] use: ←→ shimmy · ↑ climb · Hang let go
+[60.6s] after use step=drop
+[68.6s] tele {"where":"court","step":"climb","state":"hang","draws":412,"tris":342301,"fps":72,"pos":[6.962430289471641,32.620000000000005]} marker {"x":370.5,"y":365.29998779296875,"d":"3 m"}
+[72.9s] objective="Bring the sunlight to the three stelae" sub="A stone block sits in the sunbeam: push it out of the way" prompt="←→ shimmy · ↑ climb · Hang let go" hint="Climbing ←→ shimmy along the edge · ↑ climb up · Hang let go."
+[77.4s] frame 08_play.jpg
+[81.0s] tele {"where":"court","step":"block","state":"ground","draws":386,"tris":322996,"fps":73,"pos":[10.32,28.32]} marker {"x":19.5,"y":307.8999938964844,"d":"9 m"}
+[84.6s] tele {"where":"court","step":"block","state":"ground","draws":343,"tris":309338,"fps":72,"pos":[10.32,28.32]} marker {"x":19.5,"y":302.70001220703125,"d":"9 m"}
+[92.3s] tele {"where":"court","step":"block","state":"ground","draws":341,"tris":309334,"fps":72,"pos":[10.32,28.32]} marker {"x":19.5,"y":302.70001220703125,"d":"9 m"}
+[104.6s] frame 09_play.jpg
+[107.6s] tele {"where":"court","step":"block","state":"ground","draws":385,"tris":322994,"fps":72,"pos":[10.32,28.32]} marker {"x":19.5,"y":307.8999938964844,"d":"9 m"}
+[112.5s] tele {"where":"court","step":"block","state":"ground","draws":340,"tris":309532,"fps":72,"pos":[10.32,28.32]} marker {"x":19.5,"y":302.70001220703125,"d":"9 m"}
+[124.5s] tele {"where":"court","step":"block","state":"ground","draws":344,"tris":310676,"fps":70,"pos":[10.32,28.32]} marker {"x":19.5,"y":302.70001220703125,"d":"9 m"}
+[125.9s] tele {"where":"court","step":"block","state":"ground","draws":340,"tris":309018,"fps":72,"pos":[10.32,28.32]} marker {"x":19.5,"y":302.70001220703125,"d":"9 m"}
+[131.0s] tele {"where":"court","step":"block","state":"ground","draws":345,"tris":311146,"fps":73,"pos":[10.32,28.32]} marker {"x":19.5,"y":302.70001220703125,"d":"9 m"}
+[131.8s] frame 10_play.jpg
+[140.4s] tele {"where":"court","step":"block","state":"ground","draws":346,"tris":310680,"fps":72,"pos":[10.32,28.32]} marker {"x":19.5,"y":302.70001220703125,"d":"9 m"}
+[143.9s] tele {"where":"court","step":"block","state":"ground","draws":342,"tris":310490,"fps":72,"pos":[10.32,28.32]} marker {"x":19.5,"y":302.70001220703125,"d":"9 m"}
+[144.6s] tele {"where":"court","step":"block","state":"ground","draws":347,"tris":310682,"fps":68,"pos":[10.32,28.32]} marker {"x":19.5,"y":302.70001220703125,"d":"9 m"}
+[154.9s] tele {"where":"court","step":"block","state":"ground","draws":348,"tris":310684,"fps":71,"pos":[10.32,28.32]} marker {"x":19.5,"y":302.70001220703125,"d":"9 m"}
+[155.6s] tele {"where":"court","step":"block","state":"ground","draws":341,"tris":309408,"fps":72,"pos":[10.32,28.32]} marker {"x":19.5,"y":302.70001220703125,"d":"9 m"}
+[157.8s] tele {"where":"court","step":"block","state":"ground","draws":342,"tris":310572,"fps":73,"pos":[10.32,28.32]} marker {"x":19.5,"y":302.70001220703125,"d":"9 m"}
+[158.6s] frame 11_play.jpg
+[160.7s] tele {"where":"court","step":"block","state":"ground","draws":346,"tris":311118,"fps":71,"pos":[10.32,28.32]} marker {"x":19.5,"y":302.70001220703125,"d":"9 m"}
+[173.5s] tele {"where":"court","step":"block","state":"ground","draws":340,"tris":309406,"fps":71,"pos":[10.32,28.32]} marker {"x":19.5,"y":302.70001220703125,"d":"9 m"}
+[175.6s] tele {"where":"court","step":"block","state":"ground","draws":340,"tris":309406,"fps":71,"pos":[10.32,28.32]} marker {"x":19.5,"y":302.70001220703125,"d":"9 m"}
+[182.7s] tele {"where":"court","step":"block","state":"ground","draws":342,"tris":310806,"fps":71,"pos":[10.32,28.32]} marker {"x":19.5,"y":302.70001220703125,"d":"9 m"}
+[185.5s] frame 12_play.jpg
+[185.5s] tele {"where":"court","step":"block","state":"ground","draws":338,"tris":309328,"fps":70,"pos":[10.32,28.32]} marker {"x":19.5,"y":302.70001220703125,"d":"9 m"}
+[187.1s] tele {"where":"court","step":"block","state":"ground","draws":387,"tris":322998,"fps":73,"pos":[10.32,28.32]} marker {"x":19.5,"y":307.8999938964844,"d":"9 m"}
+[192.0s] tele {"where":"court","step":"block","state":"ground","draws":344,"tris":310462,"fps":72,"pos":[10.32,28.32]} marker {"x":19.5,"y":302.70001220703125,"d":"9 m"}
+[193.4s] tele {"where":"court","step":"block","state":"ground","draws":339,"tris":309418,"fps":72,"pos":[10.32,28.32]} marker {"x":19.5,"y":302.70001220703125,"d":"9 m"}
+[203.4s] tele {"where":"court","step":"block","state":"ground","draws":341,"tris":309334,"fps":72,"pos":[10.32,28.32]} marker {"x":19.5,"y":302.70001220703125,"d":"9 m"}
+[212.1s] tele {"where":"court","step":"block","state":"ground","draws":347,"tris":311120,"fps":72,"pos":[10.32,28.32]} marker {"x":19.5,"y":302.70001220703125,"d":"9 m"}
+[212.8s] frame 13_play.jpg
+[216.3s] tele {"where":"court","step":"block","state":"ground","draws":342,"tris":309536,"fps":72,"pos":[10.32,28.32]} marker {"x":19.5,"y":302.70001220703125,"d":"9 m"}
+[217.0s] tele {"where":"court","step":"block","state":"ground","draws":340,"tris":309240,"fps":70,"pos":[10.32,28.32]} marker {"x":19.5,"y":302.70001220703125,"d":"9 m"}
+[222.9s] tele {"where":"court","step":"block","state":"ground","draws":387,"tris":322998,"fps":73,"pos":[10.32,28.32]} marker {"x":19.5,"y":307.8999938964844,"d":"9 m"}
+[234.2s] tele {"where":"court","step":"block","state":"ground","draws":340,"tris":309532,"fps":71,"pos":[10.32,28.32]} marker {"x":19.5,"y":302.70001220703125,"d":"9 m"}
+[239.9s] frame 14_play.jpg
+[255.0s] frame 15_final.jpg

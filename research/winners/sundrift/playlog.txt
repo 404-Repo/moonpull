@@ -1,0 +1,50 @@
+[1.6s] loaded https://lkruer.github.io/sundrift/game/
+[9.1s] frame 01_title.jpg
+[9.2s] tap #startb "START"
+[13.3s] frame 02_start.jpg
+[14.3s] fps 73
+[14.3s] stick rect {"x":117,"y":514.8359375,"w":234,"h":658.328125}
+[14.9s] frame 03_play.jpg
+[14.9s] hud: 
+[26.7s] handbrake
+[34.6s] handbrake
+[37.6s] frame 04_play.jpg
+[37.6s] hud: 
+[39.4s] handbrake
+[45.5s] handbrake
+[54.0s] handbrake
+[60.2s] frame 05_play.jpg
+[60.2s] hud: 
+[65.0s] handbrake
+[77.9s] handbrake
+[82.8s] frame 06_play.jpg
+[82.8s] hud: 
+[89.5s] handbrake
+[92.5s] handbrake
+[99.8s] handbrake
+[102.2s] handbrake
+[105.3s] frame 07_play.jpg
+[105.3s] hud: 
+[107.7s] handbrake
+[110.1s] handbrake
+[122.3s] handbrake
+[127.8s] frame 08_play.jpg
+[127.8s] hud: 
+[145.6s] handbrake
+[150.5s] frame 09_play.jpg
+[150.5s] hud: 
+[155.4s] handbrake
+[159.6s] handbrake
+[162.6s] handbrake
+[170.5s] handbrake
+[173.0s] frame 10_play.jpg
+[173.0s] hud: 
+[173.5s] handbrake
+[176.5s] handbrake
+[187.5s] handbrake
+[193.0s] handbrake
+[195.4s] frame 11_play.jpg
+[195.4s] hud: 
+[207.1s] handbrake
+[209.4s] handbrake
+[214.4s] frame 12_final.jpg

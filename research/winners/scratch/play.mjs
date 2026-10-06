@@ -73,31 +73,40 @@ const games = {
     await tapSel('#startb');
     await sleep(1500);
     for (let i = 0; i < 8; i++) { if (!(await tapSel('#storyNext'))) break; await sleep(900); if (i === 1) await snap('prologue'); }
+    await sleep(6000); await snap('intro');
     await tapSel('#skipIntro'); await sleep(2500);
     await snap('start');
     note('fps ' + await fps());
-    let lastObj = '', shotsAt = 0;
+    const G = () => page.evaluate(() => { const g = window.__GAME__; return g && { pos: g.pos, y: g.y, yaw: g.cameraYaw, ctx: g.context, ctxLabel: g.contextLabel, obj: g.objective, area: g.area, draws: g.draws, tris: g.tris, fps: g.fps, charged: g.charged }; });
+    const P = (azd, r) => [Math.sin(azd * Math.PI / 180) * r, Math.cos(azd * Math.PI / 180) * r];
+    const g0 = await G(); note('telemetry ' + JSON.stringify(g0) + ' start polar guess ' + JSON.stringify(P(-23, 20.3)));
+    const route = [P(-47.5, 15.1), P(-77, 21), P(-70, 20), P(-82, 22), P(-90, 20), P(-86, 24), P(-112, 30), P(-90, 33), P(-112, 38), P(-80, 28), P(-30, 22), P(10, 22), P(40, 22), P(80, 22)];
+    const acted = {}; let wi = 0, lastObj = '', shotsAt = 0, lastPos = null, stuck = 0, side = 0;
     const end = Date.now() + SECS * 1000;
     while (Date.now() < end) {
-      const obj = await text('#objective'); const zone = await text('#zoneName');
-      if (obj !== lastObj) { note(`zone="${zone}" objective="${obj}" caption="${await text('#caption')}"`); lastObj = obj; }
-      const act = await rect('#action');
-      const actTxt = await text('#action');
-      if (act && actTxt && !/Catch wind/.test(actTxt) || (act && Math.random() < 0.15)) { await tap(act.x, act.y); note('action: ' + actTxt); await sleep(1200); }
+      const g = await G(); if (!g) { await sleep(500); continue; }
+      const obj = JSON.stringify(g.obj);
+      if (obj !== lastObj) { note(`area=${g.area} objective=${obj} caption="${await text('#caption')}" draws=${g.draws} tris=${g.tris} fps=${g.fps}`); lastObj = obj; }
+      const cid = g.ctx + ':' + g.ctxLabel; acted[cid] = (acted[cid] || 0); if (g.ctx && g.ctx !== 'info' && !/again/.test(g.ctxLabel || '') && acted[cid] < 3) { acted[cid]++; const a = await rect('#action'); if (a) { if (pts.has(1)) await up(1); await tap(a.x, a.y); note(`action ${g.ctx}: ${g.ctxLabel}`); await sleep(2500); continue; } }
+      const [tx, tz] = route[wi % route.length];
+      let dx = tx - g.pos[0], dz = tz - g.pos[1]; const d = Math.hypot(dx, dz);
+      if (d < 2.5) { wi++; note(`waypoint ${wi} reached at ${g.pos.map(v => v.toFixed(1))} y=${g.y.toFixed(1)}`); continue; }
+      dx /= d; dz /= d;
+      if (side) { const r = [dz * side, -dx * side]; dx = r[0]; dz = r[1]; side = 0; }
+      const cx = Math.cos(g.yaw), cz = Math.sin(g.yaw);
+      const x = cx * dx - cz * dz, y = -cz * dx - cx * dz;
       const stick = await rect('#stick');
-      const mk = await rect('#targetMarker');
-      if (stick) {
-        if (!pts.has(1)) await down(1, stick.x, stick.y);
-        if (mk) await stickToward(stick, mk.x, mk.y, 1);
-        else await stickToward(stick, W / 2 + (Math.random() - 0.5) * 200, 0, 1);
-      }
-      if (Math.random() < 0.05) { const j = await rect('#jump'); if (j) await tap(j.x, j.y); }
-      await sleep(700);
+      if (stick) { const R = stick.w * 0.36; if (!pts.has(1)) await down(1, stick.x, stick.y); await move(1, stick.x + x * R, stick.y - y * R); }
+      if (lastPos && Math.hypot(g.pos[0] - lastPos[0], g.pos[1] - lastPos[1]) < 0.3) { stuck++; if (stuck > 3) { side = Math.random() < .5 ? 1 : -1; const j = await rect('#jump'); if (j) await tap(j.x, j.y); } if (stuck > 12) { wi++; stuck = 0; note('skip waypoint, stuck'); } } else stuck = 0;
+      lastPos = g.pos;
+      if (Math.random() < 0.04) { if (pts.has(1)) await up(1); await down(2, 250, 400); for (let k = 1; k <= 6; k++) { await move(2, 250 - k * 15, 400); await sleep(30); } await up(2); }
+      await sleep(600);
       if (Date.now() - shotsAt > SECS * 1000 / 9) { await snap('play'); shotsAt = Date.now(); }
       if (await rect('#storyNext')) await tapSel('#storyNext');
       if (await rect('#keepExploring')) { note('ENDING reached'); await snap('ending'); break; }
     }
     if (pts.has(1)) await up(1);
+    note('final telemetry ' + JSON.stringify(await G()));
   },
   async farseek() {
     for (let i = 0; i < 90; i++) { if (await rect('#startb')) break; await sleep(1000); }
@@ -109,16 +118,29 @@ const games = {
     for (let i = 0; i < 6; i++) { await tap(W / 2, H / 3); await sleep(900); }
     await snap('start');
     note('fps ' + await fps());
-    let lastObj = '', shotsAt = 0;
+    const useCount = {}; let lastObj = "", shotsAt = 0;
     const end = Date.now() + SECS * 1000;
     while (Date.now() < end) {
       const obj = await text('#objective');
       if (obj !== lastObj) { note(`objective="${obj}" sub="${await text('#objective-sub')}" prompt="${await text('#prompt')}" hint="${await text('#hint')}"`); lastObj = obj; }
-      const use = await rect('#touch [data-touch="use"]');
+      const use = await rect('#touch [data-touch="interact"]');
       const pr = await text('#prompt');
-      if (use && pr) { await down(3, use.x, use.y); await sleep(400); await up(3); note('use: ' + pr); }
+      if (use && pr && (useCount[pr] = (useCount[pr] || 0) + 1) <= 4) {
+        const mk0 = await page.evaluate(() => { for (const e of document.querySelectorAll('#markers .marker')) { if (e.hidden || +getComputedStyle(e).opacity < 0.05) continue; const b = e.getBoundingClientRect(); return { x: b.left + b.width / 2, y: b.top + b.height / 2 }; } return null; });
+        const st0 = await rect('#stick');
+        if (st0 && mk0) { if (!pts.has(1)) await down(1, st0.x, st0.y); await stickToward(st0, mk0.x, mk0.y, 0.3); await sleep(350); }
+        if (pts.has(1)) await up(1);
+        await sleep(200);
+        await down(3, use.x, use.y); await sleep(120); await up(3); note('use: ' + pr);
+        await sleep(1500);
+        const rd = await page.evaluate(() => { const n = document.getElementById('notes'); return n && !n.hidden && getComputedStyle(n).display !== 'none' && +getComputedStyle(n).opacity > 0.1; });
+        if (rd) { note('notes open'); await snap('notes'); await sleep(2500); await down(3, use.x, use.y); await sleep(120); await up(3); await sleep(800); }
+        note('after use step=' + await page.evaluate(() => window.__GAME__?.step));
+        continue;
+      }
       const stick = await rect('#stick');
-      const mk = await rect('#markers > *');
+      const mk = await page.evaluate(() => { for (const e of document.querySelectorAll('#markers .marker')) { if (e.hidden || +getComputedStyle(e).opacity < 0.05) continue; const b = e.getBoundingClientRect(); return { x: b.left + b.width / 2, y: b.top + b.height / 2, d: e.textContent.trim() }; } return null; });
+      const gg = await page.evaluate(() => { const g = window.__GAME__; return g && { where: g.where, step: g.step, state: g.state, draws: g.draws, tris: g.tris, fps: g.fps, pos: g.pos }; }); if (Math.random() < 0.08) note('tele ' + JSON.stringify(gg) + ' marker ' + JSON.stringify(mk));
       if (stick) {
         if (!pts.has(1)) await down(1, stick.x, stick.y);
         if (mk) await stickToward(stick, mk.x, mk.y, 1);
