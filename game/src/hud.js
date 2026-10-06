@@ -2,7 +2,7 @@
 import { tide, dialPos } from './tide.js';
 const $ = (id) => document.getElementById(id);
 
-let toastT = 0, sayQ = null, sayDone = null;
+let toastT = 0, sayQ = null, sayDone = null, sayT = 0;
 export const hud = {
   talking: false,
   objective(place, text) {
@@ -16,6 +16,7 @@ export const hud = {
   fade(on) { $('fade').classList.toggle('on', on); },
   update(dt, use) {
     if (toastT > 0) { toastT -= dt; if (toastT <= 0) $('toast').classList.remove('on'); }
+    if (hud.talking) { sayT -= dt; if (sayT <= 0) next(); }
     // tide dial
     const tr = $('tidetrack'), h = tr.clientHeight;
     const span = 5.0; // metres shown: -2.5 .. +2.5
@@ -37,6 +38,7 @@ function next() {
   }
   const [name, text] = sayQ.shift();
   $('sayname').textContent = name; $('saytext').textContent = text; $('say').classList.add('on');
+  sayT = 2.2 + text.length * 0.055;
 }
 export function sayAdvance() { if (hud.talking) next(); }
 $('say').addEventListener('pointerdown', (e) => { e.preventDefault(); e.stopPropagation(); sayAdvance(); });

@@ -39,7 +39,7 @@ canvas { display: block; width: 100%; height: 100%; touch-action: none; }
   border: 1px solid var(--edge); opacity: 0; transition: opacity .35s; }
 #toast.on { opacity: 1; }
 
-#say { position: absolute; left: 50%; bottom: calc(24px + var(--sb)); transform: translateX(-50%); width: min(92vw, 560px); padding: 14px 18px 12px;
+#say { position: absolute; left: 50%; bottom: calc(200px + var(--sb)); transform: translateX(-50%); width: min(92vw, 560px); padding: 14px 18px 12px;
   border-radius: 14px; background: rgba(250, 240, 222, .95); color: #24343a; border: 2px solid rgba(120, 90, 60, .35); display: none;
   pointer-events: auto; box-shadow: 0 8px 30px rgba(0, 0, 0, .35); z-index: 30; }
 #say.on { display: block; }
@@ -79,6 +79,8 @@ body:not(.touchdev) .act { right: 50%; transform: translateX(50%); bottom: calc(
   border: 1px solid var(--edge); background: var(--paper); color: var(--ink); font-weight: 800; }
 
 @media (orientation: landscape) and (max-height: 500px) {
+  #say { bottom: calc(10px + var(--sb)); width: min(50vw, 520px); padding: 10px 14px 8px; }
+  #saytext { min-height: 0; font-size: 16px; }
   #tide { height: 170px; bottom: calc(40px + var(--sb)); }
   .act { right: calc(104px + 2vw); bottom: calc(28px + var(--sb)); width: 72px; height: 72px; }
   #stickzone { height: 70vh; }

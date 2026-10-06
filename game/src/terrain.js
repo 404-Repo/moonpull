@@ -64,19 +64,19 @@ function seaProfile(d, x) {
 // --- authored features -----------------------------------------------------------------------
 // Segments: from a to b, top height ha -> hb, half width w, side falloff f. mode: set | raise | cut
 export const FEATURES = [];
-const seg = (ax, az, bx, bz, ha, hb, w, f, mode = 'set') => FEATURES.push({ k: 'seg', ax, az, bx, bz, ha, hb, w, f, mode });
-const disc = (x, z, r, h, f, mode = 'set') => FEATURES.push({ k: 'disc', x, z, r, h, f, mode });
+const seg = (ax, az, bx, bz, ha, hb, w, f, mode = 'set', path = 0) => FEATURES.push({ k: 'seg', ax, az, bx, bz, ha, hb, w, f, mode, path });
+const disc = (x, z, r, h, f, mode = 'set', path = 0) => FEATURES.push({ k: 'disc', x, z, r, h, f, mode, path });
 const mound = (x, z, r, h) => FEATURES.push({ k: 'mound', x, z, r, h });
 
 // HARBOUR (Gullwick). Village bench sits about +4.9; beach 0.4..1.7.
-disc(-150, 52, 15, 4.9, 6);                                  // Nell's yard and the square
-seg(-185, 48, -112, 48, 4.9, 4.9, 6, 5);                      // the village street along the bench
-seg(-150, 40, -150, 31, 4.9, 1.6, 2.2, 3);                    // stair-ramp from the square to the beach
-seg(-118, 42, -112, 31, 4.9, 1.5, 2.0, 3);                    // second ramp by the boathouse
-seg(-170, 64, -130, 66, 9.6, 9.6, 5, 5);                      // upper lane (bench 2)
-seg(-132, 66, -122, 52, 9.6, 4.9, 2, 3);                      // lane down to the street
-seg(-120, 26, -104, -28, -0.9, -0.9, 2.2, 2.5);               // THE CAUSEWAY: dry only when the sea is pulled down
-disc(-100, -40, 9, 2.6, 7);                                   // the well islet
+disc(-150, 50, 11, 4.9, 6, 'set', 0.75);                                  // Nell's yard and the square
+seg(-192, 48, -110, 47, 4.9, 4.9, 6, 5, 'set', 3.2);                      // the village street along the bench
+seg(-150, 40, -150, 31, 4.9, 1.6, 2.2, 3, 'set', 2.2);                    // stair-ramp from the square to the beach
+seg(-118, 42, -112, 31, 4.9, 1.5, 2.0, 3, 'set', 2.0);                    // second ramp by the boathouse
+seg(-190, 62, -112, 62, 9.6, 9.6, 5, 5, 'set', 2.4);                      // upper lane (bench 2)
+seg(-145, 61, -145, 51, 9.6, 4.9, 2, 3, 'set', 1.8);                      // lane down to the street
+seg(-120, 26, -104, -28, -0.9, -0.9, 2.2, 2.5, 'set', 2.2);               // THE CAUSEWAY: dry only when the sea is pulled down
+disc(-100, -40, 9, 2.2, 7);                                   // the well islet
 mound(-97, -46, 6, 0.8);
 seg(-168, 28, -162, 18, 1.4, 0.6, 3.5, 3);                    // the mud scrape Tam's boat lies in
 disc(-165, 17, 5, 0.5, 4, 'cut');
@@ -116,6 +116,22 @@ function applyFeature(f, x, z, h) {
   return lerp(h, top, w);
 }
 
+export function pathAt(x, z) {
+  let p = 0;
+  for (const f of FEATURES) {
+    if (!f.path) continue;
+    let dist;
+    if (f.k === 'disc') dist = Math.hypot(x - f.x, z - f.z) - f.r * f.path;
+    else {
+      const vx = f.bx - f.ax, vz = f.bz - f.az, L2 = vx * vx + vz * vz;
+      const t = Math.min(1, Math.max(0, ((x - f.ax) * vx + (z - f.az) * vz) / L2));
+      dist = Math.hypot(x - (f.ax + vx * t), z - (f.az + vz * t)) - f.path;
+    }
+    p = Math.max(p, 1 - sstep(-0.4, 0.8, dist + fbm(x * 0.5, z * 0.5, 2) * 0.8));
+  }
+  return p;
+}
+
 export function heightAt(x, z) {
   const d = z - shoreZ(x);
   let h = d >= 0 ? landProfile(d, x) : seaProfile(d, x);
@@ -150,9 +166,13 @@ export function makeSampler(grid) {
 // A half-float height texture the water and ground shaders read for depth, foam and wetness.
 export function heightTexture(grid) {
   const { nx, nz, H } = grid;
-  const data = new Uint16Array(nx * nz);
-  for (let k = 0; k < H.length; k++) data[k] = THREE.DataUtils.toHalfFloat(H[k]);
-  const tex = new THREE.DataTexture(data, nx, nz, THREE.RedFormat, THREE.HalfFloatType);
+  const data = new Uint16Array(nx * nz * 2);
+  for (let j = 0; j < nz; j++) for (let i = 0; i < nx; i++) {
+    const k = j * nx + i;
+    data[k * 2] = THREE.DataUtils.toHalfFloat(H[k]);
+    data[k * 2 + 1] = THREE.DataUtils.toHalfFloat(pathAt(grid.x0 + i * grid.step, grid.z0 + j * grid.step));
+  }
+  const tex = new THREE.DataTexture(data, nx, nz, THREE.RGFormat, THREE.HalfFloatType);
   tex.magFilter = THREE.LinearFilter; tex.minFilter = THREE.LinearFilter; tex.needsUpdate = true;
   return tex;
 }

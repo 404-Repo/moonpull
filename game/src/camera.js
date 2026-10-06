@@ -1,53 +1,75 @@
-// A follow camera at character scale: Bellkeeper's framing (about 42 degrees vertical field of
-// view, 25 degrees down, about 11 m back) in landscape, widened for a portrait phone so the girl
-// stays small and the place stays big. Swings itself behind her when she walks; a drag takes over.
+// A follow camera at character scale, matched to The Last Bellkeeper's measured rig
+// (research/winners/WINNERS.md): fov 42, pitch atan(0.48) = 25.6 degrees down, arm 10.8 m in
+// landscape and 11.5 m in portrait, focus 1.0 m above the hero and 0.8 m toward the camera,
+// followed at rate 7, portrait view shifted up 14%. The player swings yaw only. When ground or
+// a solid gets between, the pitch rises first and the arm shortens only after that.
 import * as THREE from 'three';
+
+const PITCH = Math.atan(0.48);
 
 export class FollowCam {
   constructor(camera, ground) {
     this.cam = camera; this.ground = ground;
-    this.yaw = Math.PI;            // looking toward -Z... set by caller
-    this.pitch = THREE.MathUtils.degToRad(25.6);
-    this.arm = 10.8; this.manualT = 99; this.focus = new THREE.Vector3(); this.shake = 0;
-    this.zoomBias = 0; this.lookAhead = new THREE.Vector3();
+    this.yaw = 0; this.pitch = PITCH; this.arm = 10.8; this.baseArm = 10.8;
+    this.manualT = 99; this.focus = new THREE.Vector3(); this.shake = 0;
+    this.extraPitch = 0; this.extraArm = 0;   // set by set pieces (boat, boss)
+    this.blockers = null;                      // optional fn(x, z) -> top height of a solid there
   }
   resize(w, h) {
-    const portrait = h > w;
-    this.portrait = portrait;
+    this.portrait = w / h < 0.85;
     this.cam.aspect = w / h;
-    this.cam.fov = portrait ? 60 : 42;
-    this.baseArm = portrait ? 11.5 : 10.8;
+    this.cam.fov = 42;
+    this.baseArm = this.portrait ? 11.5 : 10.8;
+    if (this.portrait) this.cam.setViewOffset(w, h, 0, -h * 0.14, w, h); else this.cam.clearViewOffset();
     this.cam.updateProjectionMatrix();
   }
-  snap(target, yaw) { this.yaw = yaw; this.focus.copy(target); this.update(0, target, null, { dx: 0, dy: 0 }, true); }
+  snap(target, yaw) { this.yaw = yaw; this.update(0, target, null, { dx: 0, dy: 0 }, true); }
+  clearance(fx, fy, fz, pitch, arm) {
+    // the worst intrusion of ground along the boom, in metres
+    const cp = Math.cos(pitch), sp = Math.sin(pitch);
+    let worst = 0;
+    for (let k = 0.35; k <= 1.0001; k += 0.13) {
+      const x = fx + Math.sin(this.yaw) * cp * arm * k, z = fz + Math.cos(this.yaw) * cp * arm * k, y = fy + sp * arm * k;
+      let g = this.ground(x, z);
+      if (this.blockers) g = Math.max(g, this.blockers(x, z));
+      worst = Math.max(worst, g + 0.8 - y);
+    }
+    return worst;
+  }
   update(dt, target, vel, look, instant = false) {
-    if (look.dx || look.dy) {
-      this.yaw -= look.dx * 0.0062;
-      this.pitch = THREE.MathUtils.clamp(this.pitch + look.dy * 0.004, 0.12, 0.95);
-      look.dx = 0; look.dy = 0; this.manualT = 0;
-    } else this.manualT += dt;
-    // swing behind the direction of travel once the player has let go of the camera
-    if (vel && this.manualT > 1.6) {
+    if (look.dx) { this.yaw -= look.dx * 0.006; this.manualT = 0; }
+    look.dx = 0; look.dy = 0;
+    this.manualT += dt;
+    // swing gently behind the direction of travel once the player has let go of the camera
+    if (vel && this.manualT > 2.0) {
       const sp = Math.hypot(vel.x, vel.z);
-      if (sp > 1.2) {
+      if (sp > 1.4) {
         const want = Math.atan2(-vel.x, -vel.z);
         let d = want - this.yaw; d = Math.atan2(Math.sin(d), Math.cos(d));
-        // only follow gentle turns: walking toward the camera should not spin it
-        if (Math.abs(d) < 2.2) this.yaw += d * Math.min(1, dt * 0.9 * Math.min(1, sp / 3));
+        if (Math.abs(d) < 2.0) this.yaw += d * Math.min(1, dt * 0.7 * Math.min(1, sp / 3.5));
       }
     }
-    if (vel) this.lookAhead.lerp(new THREE.Vector3(vel.x * 0.35, 0, vel.z * 0.35), Math.min(1, dt * 2));
-    const f = target.clone().add(this.lookAhead); f.y += 1.15;
-    if (instant) this.focus.copy(f); else this.focus.lerp(f, Math.min(1, dt * 6));
-    const arm = (this.baseArm || this.arm) + this.zoomBias;
+    const f = target.clone(); f.y += 1.0;
+    f.x += Math.sin(this.yaw) * 0.8; f.z += Math.cos(this.yaw) * 0.8;
+    if (instant) this.focus.copy(f); else this.focus.lerp(f, 1 - Math.exp(-7 * dt));
+
+    // pitch first, then arm, to keep the ground and solids out of the lens
+    let wantPitch = PITCH + this.extraPitch, wantArm = this.baseArm + this.extraArm;
+    for (let i = 0; i < 6 && this.clearance(this.focus.x, this.focus.y, this.focus.z, wantPitch, wantArm) > 0; i++) wantPitch = Math.min(0.96, wantPitch + 0.08);
+    for (let i = 0; i < 8 && this.clearance(this.focus.x, this.focus.y, this.focus.z, wantPitch, wantArm) > 0 && wantArm > 2.5; i++) wantArm = Math.max(2.5, wantArm - 1.0);
+    if (instant) { this.pitch = wantPitch; this.arm = wantArm; }
+    else {
+      this.pitch += (wantPitch - this.pitch) * (1 - Math.exp(-(wantPitch > this.pitch ? 12 : 2.4) * dt));
+      this.arm += (wantArm - this.arm) * (1 - Math.exp(-(wantArm < this.arm ? 12 : 2) * dt));
+    }
     const cp = Math.cos(this.pitch), sp2 = Math.sin(this.pitch);
     const pos = new THREE.Vector3(
-      this.focus.x + Math.sin(this.yaw) * cp * arm,
-      this.focus.y + sp2 * arm,
-      this.focus.z + Math.cos(this.yaw) * cp * arm);
-    const gh = this.ground(pos.x, pos.z) + 1.0;
+      this.focus.x + Math.sin(this.yaw) * cp * this.arm,
+      this.focus.y + sp2 * this.arm,
+      this.focus.z + Math.cos(this.yaw) * cp * this.arm);
+    const gh = this.ground(pos.x, pos.z) + 0.8;
     if (pos.y < gh) pos.y = gh;
-    if (this.shake > 0) { pos.x += (Math.random() - 0.5) * this.shake; pos.y += (Math.random() - 0.5) * this.shake; this.shake *= Math.pow(0.02, dt); }
+    if (this.shake > 0.002) { pos.x += (Math.random() - 0.5) * this.shake; pos.y += (Math.random() - 0.5) * this.shake; this.shake *= Math.pow(0.02, dt); }
     this.cam.position.copy(pos);
     this.cam.lookAt(this.focus);
   }

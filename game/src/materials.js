@@ -15,6 +15,8 @@ uniform float uSea; uniform float uWet; uniform float uTime;
 uniform sampler2D uHeight; uniform vec4 uWorld;
 varying vec3 vWPos;
 float hAt(vec2 xz){ return texture2D(uHeight, (xz - uWorld.xy) * uWorld.zw).r; }
+float pathAt(vec2 xz){ return texture2D(uHeight, (xz - uWorld.xy) * uWorld.zw).g; }
+vec2 h22(vec2 p){ return fract(sin(vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3)))) * 43758.5453); }
 float h21(vec2 p){ p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }
 float vn(vec2 p){ vec2 i = floor(p), f = fract(p); vec2 u = f * f * (3.0 - 2.0 * f);
   return mix(mix(h21(i), h21(i + vec2(1, 0)), u.x), mix(h21(i + vec2(0, 1)), h21(i + vec2(1, 1)), u.x), u.y); }
@@ -52,14 +54,26 @@ export function groundMaterial() {
           // ripples on the low sand
           float rip = sin(dot(p, vec2(0.9, 0.35)) * 3.2 + n2 * 4.0) * 0.5 + 0.5;
           vec3 wetSand = mix(vec3(0.42, 0.36, 0.28), vec3(0.50, 0.43, 0.33), rip * 0.6 + n3 * 0.3);
-          vec3 grass = mix(vec3(0.36, 0.45, 0.20), vec3(0.52, 0.55, 0.26), n1);
+          vec3 grass = mix(vec3(0.30, 0.40, 0.17), vec3(0.50, 0.53, 0.24), n1) * (0.82 + 0.3 * n2);
           grass = mix(grass, vec3(0.62, 0.56, 0.34), smoothstep(0.55, 0.8, n2) * 0.5);   // dry tufts
           vec3 rock = mix(vec3(0.52, 0.47, 0.42), vec3(0.74, 0.65, 0.53), n1);
-          rock *= 0.85 + 0.25 * vn(vec2(p.x * 0.4 + p.y * 0.2, y * 2.2));               // strata
+          rock *= 0.78 + 0.22 * vn(vec2((p.x + p.y) * 0.35, y * 1.6)) + 0.18 * vn(vec2((p.x - p.y) * 1.3, y * 5.0)) - 0.12 * smoothstep(0.6, 0.9, vn(vec2(p.x * 2.1 + p.y, y * 0.9)));
           vec3 weed = mix(vec3(0.25, 0.29, 0.13), vec3(0.33, 0.33, 0.16), n2);
           vec3 c = sand;
           c = mix(c, grass, smoothstep(2.4, 3.6, y + n1 * 1.5) * (1.0 - smoothstep(0.35, 0.6, slope)));
           c = mix(c, rock, smoothstep(0.32, 0.55, slope + n2 * 0.15));
+          // cobbles where the paths run: a jittered cell pattern, each stone its own tone
+          float pth = pathAt(p);
+          if (pth > 0.01) {
+            vec2 q = p * 2.3; vec2 iq = floor(q), fq = fract(q); float d1 = 9.0, d2 = 9.0; vec2 cid = vec2(0.0);
+            for (int yy = -1; yy <= 1; yy++) for (int xx = -1; xx <= 1; xx++) {
+              vec2 o = vec2(float(xx), float(yy)); vec2 r = o + h22(iq + o) * 0.85 - fq; float dd = dot(r, r);
+              if (dd < d1) { d2 = d1; d1 = dd; cid = iq + o; } else if (dd < d2) d2 = dd; }
+            float edge = smoothstep(0.02, 0.16, sqrt(d2) - sqrt(d1));
+            vec3 stone = mix(vec3(0.46, 0.45, 0.42), vec3(0.62, 0.58, 0.50), h22(cid).x) * (0.85 + 0.2 * h22(cid).y) * (0.9 + 0.2 * n1);
+            vec3 cob = mix(mix(vec3(0.22, 0.24, 0.16), vec3(0.24, 0.22, 0.19), n3), stone, edge);
+            c = mix(c, cob, smoothstep(0.2, 0.6, pth));
+          }
           // below the last high water: wet, darker, weed on the low stones
           float wet = 1.0 - smoothstep(uWet - 0.05, uWet + 0.35, y + n3 * 0.15);
           c = mix(c, wetSand * mix(vec3(1.0), rock / max(sand, vec3(0.1)), smoothstep(0.32, 0.55, slope) * 0.6), wet * 0.85);

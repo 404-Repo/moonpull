@@ -97,7 +97,7 @@ export async function buildHarbour(ctx) {
   shard.name = 'shard'; shard.position.y = 0.35; bucket.add(shard);
   const shardLight = new THREE.PointLight(0x9fd8ff, 6, 7, 2); shardLight.position.y = 0.5; bucket.add(shardLight);
   scene.add(bucket);
-  const wellFloor = islH - 2.2, wellRim = islH + 0.55;
+  const wellFloor = islH - 2.6, wellRim = islH - 0.4;
   world.tick((dt, t) => {
     const y = Math.max(wellFloor, Math.min(wellRim, tide.level));
     wellWater.position.set(H.well.x, y + 0.01, H.well.z);
@@ -107,7 +107,7 @@ export async function buildHarbour(ctx) {
 
   // --- people -------------------------------------------------------------------------------
   const nell = await ctx.person('nell_tidekeeper', H.nell.x, H.nell.z, Math.PI * 0.85);
-  const tam = await ctx.person('nell_tidekeeper', H.tam.x, H.tam.z, -0.6, { tint: true });
+  const tam = await ctx.person('tam_fisherman', H.tam.x, H.tam.z, -0.6);
 
   // --- the story of this place --------------------------------------------------------------
   const S = ctx.story;
@@ -132,7 +132,7 @@ export async function buildHarbour(ctx) {
     check: () => tide.level > wellRim - 0.15 && near(H.well, 8) });
 
   S.step({ place: P, text: 'Take the moon shard from the bucket',
-    use: { x: H.well.x, z: H.well.z, r: 2.6, label: 'Take', when: () => tide.level > wellRim - 0.4 },
+    use: { x: H.well.x, z: H.well.z, r: 3.2, label: 'Take', when: () => tide.level > wellRim - 0.4 },
     onUse(done) {
       bucket.remove(shard); shardLight.intensity = 0;
       tide.lo = -2.4; tide.hi = 2.4; sfx.shard();

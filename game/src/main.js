@@ -152,7 +152,6 @@ function frame() {
   if (playing) {
     if (input.act) { input.act = false; if (hud.talking) sayAdvance(); else { const u = world.nearestUse(player.pos.x, player.pos.z); if (u && !u.busy) u.use(); } }
     updateTide(dt, input);
-    player.frozen = hud.talking;
     player.update(dt, input, cam.yaw);
     story.update();
   } else { input.act = false; }
@@ -184,7 +183,7 @@ function frame() {
   G.fps = Math.round(fpsT); G.speed = +player.speed.toFixed(2); G.score = story.count;
   G.draws = renderer.info.render.calls; G.tris = renderer.info.render.triangles;
   G.tide = +tide.level.toFixed(2); G.step = story.i; G.objective = story.current ? story.current.text : 'done';
-  G.depth = +player.depth.toFixed(2); G.heading = +player.yaw.toFixed(2);
+  G.depth = +player.depth.toFixed(2); G.heading = +player.yaw.toFixed(2); G.camYaw = +cam.yaw.toFixed(3); G.talking = hud.talking; G.use = (world.nearestUse(player.pos.x, player.pos.z) || {}).label || null; G.y = +player.pos.y.toFixed(2);
 }
 
 progress(1, 'ready');
