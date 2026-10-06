@@ -30,10 +30,10 @@ export async function buildFlats(ctx) {
   }
 
   // the wreck: solid hull, a stern you can only reach from a raft at high water
-  const wr = await put('wreck_hull', F.wreck.x, F.wreck.z, { rot: F.wreck.rot, y: -0.25 });
+  const wr = await put('wreck_hull', F.wreck.x, F.wreck.z, { rot: F.wreck.rot, y: -0.6 });
   { const c = loc(0, 2); world.solid({ x: c.x, z: c.z, hw: 3.2, hd: 8.6, rot: F.wreck.rot, y1: 6 }); }
   // the stern cabin floor: a platform up at +2.2
-  const cabinTop = world.terrain(F.wreck.x, F.wreck.z) - 0.25 + 4.1;
+  const cabinTop = world.terrain(F.wreck.x, F.wreck.z) - 0.6 + 4.1;
   world.plat({ x: F.stern.x, z: F.stern.z, hw: 1.6, hd: 1.6, rot: F.wreck.rot, top: cabinTop });
   world.solid({ x: F.stern.x, z: F.stern.z, hw: 1.0, hd: 1.4, rot: F.wreck.rot, y1: cabinTop });
 

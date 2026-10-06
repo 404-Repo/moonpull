@@ -99,6 +99,23 @@ export function groundMaterial() {
           c = mix(c, vec3(0.30, 0.33, 0.30), smoothstep(-1.5, -6.0, y) * 0.7);
           diffuseColor.rgb = pow(c, vec3(2.2));
         }`)
+      .replace('#include <normal_fragment_maps>', /* glsl */`
+        #include <normal_fragment_maps>
+        {
+          // sand ripples as real relief, so the flats catch the low sun in lines
+          vec2 p = vWPos.xz;
+          float low = 1.0 - smoothstep(1.2, 2.6, vWPos.y);
+          float path = pathAt(p);
+          float wv = fb(p * 0.09);
+          vec2 dir = normalize(vec2(0.9, 0.35) + vec2(wv - 0.5) * 0.8);
+          float ph = dot(p, dir) * 4.2 + fb(p * 0.2) * 2.0;
+          float amp = 0.07 * low * (1.0 - path) * (0.5 + 0.5 * wv);
+          vec2 g2 = dir * cos(ph) * amp;
+          // small cockle pits and worm casts
+          float pit = smoothstep(0.92, 0.99, vn(p * 2.3));
+          vec3 wn = normalize(vec3(-g2.x, 1.0, -g2.y));
+          normal = normalize(mix(normal, normalize((viewMatrix * vec4(wn, 0.0)).xyz), 0.75 * low * (1.0 - path)));
+        }`)
       .replace('#include <roughnessmap_fragment>', /* glsl */`
         #include <roughnessmap_fragment>
         { float wetR = 1.0 - smoothstep(uWet - 0.05, uWet + 0.3, vWPos.y);

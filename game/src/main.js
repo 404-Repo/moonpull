@@ -15,7 +15,7 @@ import { initAudio, sfx, music } from './audio.js';
 import { buildHarbour, HARBOUR } from './harbour.js';
 import { buildFlats, FLATS } from './flats.js';
 import { buildScenery } from './scenery.js';
-import { dressHarbour, dressFlats, gulls } from './dress.js';
+import { dressHarbour, dressFlats, gulls, wreckDebris } from './dress.js';
 import { buildGullHead } from './gullhead.js';
 import { buildStack } from './stack.js';
 import { makeFinale } from './finale.js';
@@ -125,6 +125,7 @@ hud.window = () => (ctx.tideWindow ? ctx.tideWindow() : null);
 progress(0.8, 'hanging out the washing');
 await dressHarbour(ctx);
 await dressFlats(ctx);
+await wreckDebris(ctx);
 await gulls(ctx);
 progress(0.9, 'the tide is turning');
 // static scenery merged by material: one bake per area keeps culling useful
