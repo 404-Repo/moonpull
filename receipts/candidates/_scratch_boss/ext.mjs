@@ -1,0 +1,10 @@
+import * as THREE from '/Users/atlas/404_assetlib/node_modules/three/build/three.module.js';
+const g = (await import(process.argv[2] + '?' + Date.now())).default(THREE);
+g.updateMatrixWorld(true);
+const J = g.userData.joints, v = new THREE.Vector3();
+const ext = (o) => { const b = new THREE.Box3(); o.traverse(n => { if (!n.isMesh) return; const p = n.geometry.attributes.position; for (let i = 0; i < p.count; i++) b.expandByPoint(v.fromBufferAttribute(p, i).applyMatrix4(n.matrixWorld)); }); return b; };
+const f = (b) => `x ${b.min.x.toFixed(2)}..${b.max.x.toFixed(2)} y ${b.min.y.toFixed(2)}..${b.max.y.toFixed(2)} z ${b.min.z.toFixed(2)}..${b.max.z.toFixed(2)}`;
+console.log('ALL', f(ext(g)));
+for (const k of Object.keys(J)) console.log(k.padEnd(12), f(ext(J[k])));
+let tris = 0, mats = new Set(); g.traverse(n => { if (n.isMesh) { tris += (n.geometry.index ? n.geometry.index.count : n.geometry.attributes.position.count) / 3; mats.add(n.material); } });
+console.log('tris', tris, 'materials', mats.size, [...mats].map(m => m.name || m.color.getHexString()).join(','));

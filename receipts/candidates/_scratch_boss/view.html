@@ -1,0 +1,36 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}</script>
+<style>body{margin:0;background:#222}</style></head><body>
+<script type="module">
+import * as THREE from 'three';
+import { ASSET } from '/game/assetlib.js';
+const q = new URLSearchParams(location.search);
+const url = q.get('a'); const mode = q.get('m') || 'rest'; const W = 600, Hh = 600;
+const r = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+r.setSize(W * 3, Hh * 2); r.setScissorTest(true); document.body.appendChild(r.domElement);
+r.outputColorSpace = THREE.SRGBColorSpace; r.toneMapping = THREE.ACESFilmicToneMapping;
+const scene = new THREE.Scene(); scene.background = new THREE.Color(0x9aa3ab);
+scene.add(new THREE.HemisphereLight(0xcfe3ff, 0x806040, 1.4));
+const sun = new THREE.DirectionalLight(0xfff0d8, 2.4); sun.position.set(6, 12, 9); scene.add(sun);
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(40, 40), new THREE.MeshStandardMaterial({ color: 0x777066 }));
+ground.rotation.x = -Math.PI / 2; scene.add(ground);
+const obj = await ASSET(url, { keepHierarchy: true });
+const J = obj.userData.joints || {};
+const need = ['body','shell','clawL','clawR','clawLPincer','clawRPincer','eyeL','eyeR','legL0','legL1','legL2','legR0','legR1','legR2'];
+const missing = need.filter(k => !J[k] || !J[k].isGroup);
+if (mode.includes('claws')) { J.clawL.rotation.x -= 0.6; J.clawR.rotation.x -= 0.6; J.clawLPincer.rotation.x -= 0.6; J.clawRPincer.rotation.x -= 0.6; J.eyeL.rotation.z += 0.25; J.eyeR.rotation.z -= 0.25; }
+if (mode.includes('noshell')) J.shell.visible = false;
+if (mode.includes('lift')) { J.shell.position.y += 3; J.shell.rotation.z = 0.3; }
+if (mode.includes('stride')) { for (let i = 0; i < 3; i++) { const ph = (i % 2 ? 1 : -1); J['legL' + i].rotation.y += 0.35 * ph; J['legR' + i].rotation.y += 0.35 * ph; J['legL' + i].rotation.z += (ph > 0 ? 0.3 : 0); J['legR' + i].rotation.z -= (ph < 0 ? 0.3 : 0); } J.body.position.y += 0.15; J.body.rotation.z = 0.05; }
+const box = new THREE.Box3().setFromObject(obj); const h = box.max.y; const sz = box.getSize(new THREE.Vector3());
+function view(i, cam) { const x = (i % 3) * W, y = (1 - Math.floor(i / 3)) * Hh; r.setViewport(x, y, W, Hh); r.setScissor(x, y, W, Hh); r.render(scene, cam); }
+scene.add(obj);
+const C = (x, y, z, ty, fov = 40) => { const c = new THREE.PerspectiveCamera(fov, W / Hh, 0.1, 200); c.position.set(x, y, z); c.lookAt(0, ty, 0); return c; };
+view(0, C(13, 7, 15, 3.8));   // 3/4 front-left
+view(1, C(0, 4.5, 21, 4));     // front
+view(2, C(21, 4.5, 0, 4));     // side (+X)
+view(3, C(-13, 9, -15, 3.5));  // 3/4 back-right
+view(4, C(-9, 4, 12, 3.5));    // 3/4 front-right low
+view(5, C(6, 22, 8, 2.5));    // top
+document.title = 'DONE ' + JSON.stringify({ missing, size: [sz.x, sz.y, sz.z].map(v => +v.toFixed(2)) });
+</script></body></html>
