@@ -6,7 +6,7 @@ import { hud } from './hud.js';
 
 export const HARBOUR = {
   start: { x: -146, z: 44, yaw: Math.PI * 0.1 },
-  nell: { x: -151, z: 54 },
+  nell: { x: -152, z: 50.5 },
   tam: { x: -160, z: 29 },
   well: { x: -100, z: -40 },
   islet: { x: -100, z: -40, r: 10 },

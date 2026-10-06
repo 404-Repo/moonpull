@@ -16,6 +16,7 @@ const errs = [];
 page.on('console', (m) => { if (m.type() === 'error') errs.push(m.text()); });
 page.on('pageerror', (e) => errs.push('pageerror: ' + e.message));
 const q = [];
+if (process.argv.includes('--clean')) q.push('clean');
 if (arg('step')) q.push('step=' + arg('step'));
 if (arg('at')) q.push('at=' + arg('at'));
 await page.goto(BASE + (q.length ? '?' + q.join('&') : ''), { waitUntil: 'load' });
@@ -83,7 +84,7 @@ const results = [];
 
 if (ROUTE === 'harbour' || ROUTE === 'all') {
   await log('begin');
-  await walk(-150.5, 52, { r: 1.0, snapEvery: 2500 });
+  await walk(-151, 48.8, { r: 1.0, snapEvery: 2500 });
   await use(); await talkThrough();
   await expectStep(1, 'talked to Nell, got the lantern');
   await walk(-118, 28, { r: 2, snapEvery: 3000 });

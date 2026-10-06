@@ -74,7 +74,7 @@ seg(-192, 48, -110, 47, 4.9, 4.9, 6, 5, 'set', 3.2);                      // the
 seg(-150, 40, -150, 31, 4.9, 1.6, 2.2, 3, 'set', 2.2);                    // stair-ramp from the square to the beach
 seg(-118, 42, -112, 31, 4.9, 1.5, 2.0, 3, 'set', 2.0);                    // second ramp by the boathouse
 seg(-190, 62, -112, 62, 9.6, 9.6, 5, 5, 'set', 2.4);                      // upper lane (bench 2)
-seg(-145, 61, -145, 51, 9.6, 4.9, 2, 3, 'set', 1.8);                      // lane down to the street
+seg(-145, 61, -145, 51, 9.6, 4.9, 2, 3, 'set', 0);                      // lane down to the street
 seg(-120, 26, -104, -28, -0.9, -0.9, 2.2, 2.5, 'set', 2.2);               // THE CAUSEWAY: dry only when the sea is pulled down
 disc(-100, -40, 9, 2.2, 7);                                   // the well islet
 mound(-97, -46, 6, 0.8);

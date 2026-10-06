@@ -15,10 +15,11 @@ import { initAudio, sfx } from './audio.js';
 import { buildHarbour, HARBOUR } from './harbour.js';
 import { buildFlats, FLATS } from './flats.js';
 import { buildScenery } from './scenery.js';
-import { dressHarbour } from './dress.js';
+import { dressHarbour, dressFlats, gulls } from './dress.js';
 
 const $ = (id) => document.getElementById(id);
 const Q = new URLSearchParams(location.search);
+if (Q.has('clean')) document.body.classList.add('clean');
 const progress = (p, msg) => { $('barf').style.width = Math.round(p * 100) + '%'; if (msg) $('loadmsg').textContent = msg; };
 
 window.__GAME__ = { pos: [0, 0], fps: 0, speed: 0, score: 0, over: false, draws: 0, tris: 0 };
@@ -100,6 +101,8 @@ await buildFlats(ctx);
 await buildScenery(ctx);
 progress(0.8, 'hanging out the washing');
 await dressHarbour(ctx);
+await dressFlats(ctx);
+await gulls(ctx);
 progress(0.9, 'the tide is turning');
 // static scenery merged by material: one bake per area keeps culling useful
 {
@@ -115,6 +118,7 @@ player.place(HARBOUR.start.x, HARBOUR.start.z, HARBOUR.start.yaw);
 player.onSwept = () => { hud.fade(true); sfx.splash(); hud.toast('The sea carried you back to dry ground.', 3); setTimeout(() => hud.fade(false), 900); };
 const cam = new FollowCam(camera, terrainH);
 ctx.cam = cam;
+cam.blockers = (x, z) => world.blockerTop(x, z);
 cam.resize(innerWidth, innerHeight);
 cam.snap(player.pos, Math.PI * 0.08);
 

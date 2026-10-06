@@ -1,0 +1,32 @@
+{
+ "pair_01.png": {
+  "build": "left",
+  "build_file": "05_walk.jpg",
+  "ref_file": "f0.jpg"
+ },
+ "pair_02.png": {
+  "build": "right",
+  "build_file": "09_causeway.jpg",
+  "ref_file": "f1.jpg"
+ },
+ "pair_03.png": {
+  "build": "left",
+  "build_file": "12_shard.jpg",
+  "ref_file": "f2.jpg"
+ },
+ "pair_04.png": {
+  "build": "right",
+  "build_file": "17_walk.jpg",
+  "ref_file": "f3.jpg"
+ },
+ "pair_05.png": {
+  "build": "right",
+  "build_file": "35_flats.jpg",
+  "ref_file": "f4.jpg"
+ },
+ "pair_06.png": {
+  "build": "left",
+  "build_file": "41_toraft.jpg",
+  "ref_file": "f5.jpg"
+ }
+}

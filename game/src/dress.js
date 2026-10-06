@@ -10,7 +10,7 @@ export async function dressHarbour(ctx) {
   // the square: stall, nets, planters
   await put('market_stall', -158, 46.5, { rot: 0.25 }); world.solid({ x: -158, z: 46.5, hw: 1.6, hd: 1.0, rot: 0.25 });
   await put('net_rack', -141.5, 45.5, { rot: -0.1 }); world.solid({ x: -141.5, z: 45.5, hw: 1.8, hd: 0.4, rot: -0.1 });
-  await put('net_rack', -128, 26.5, { rot: 0.6 }); world.solid({ x: -128, z: 26.5, hw: 1.8, hd: 0.4, rot: 0.6 });
+  await put('net_rack', -136, 37.5, { rot: 0.1 }); world.solid({ x: -136, z: 37.5, hw: 1.8, hd: 0.4, rot: 0.1 });
   await put('net_rack', -170, 31.5, { rot: -0.3 }); world.solid({ x: -170, z: 31.5, hw: 1.8, hd: 0.4, rot: -0.3 });
 
   // the street's sea side: a dry-stone wall broken by the ramps, fences on the upper lane
@@ -58,4 +58,49 @@ export async function dressHarbour(ctx) {
   }
   // the stairs up to the upper lane
   await put('cliff_stairs', -145, 56, { rot: Math.PI, raw: true }).then((o) => { if (o) o.position.y = 4.65; });
+}
+
+// The Shellflats: old fish weirs in curving rows, an anchor the wreck dropped, buoys that float
+// when the sea is up and lie on the sand when it is down, tide-pool rocks and kelp.
+export async function dressFlats(ctx) {
+  const { put, world } = ctx;
+  let seed = 23; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  for (const [x, z, r] of [[8, -22, 0.4], [18, -30, 0.9], [-6, -40, -0.3], [72, -30, 1.4], [82, -38, 1.9], [28, -72, 0.1], [40, -76, -0.2]]) {
+    await put('fish_weir', x, z, { rot: r });
+  }
+  await put('anchor', 36, -50, { rot: 0.8 }); world.solid({ x: 36, z: -50, r: 1.2 });
+  for (const [x, z] of [[5, -60], [60, -66], [-15, -28], [88, -52], [20, -88], [64, -16]]) {
+    const o = await put('buoy', x, z, { raw: true, rot: rnd() * 6 });
+    if (o) world.floater(o, { x, z, draft: 0.3, rot: rnd() * 6, tiltWhenGrounded: 0.5, bob: 2 });
+  }
+  for (let i = 0; i < 40; i++) {
+    const x = -20 + rnd() * 120, z = -95 + rnd() * 80;
+    if (Math.hypot(x - 46, z - 46 * -1) < 14) continue;
+    const r = rnd();
+    const slug = r < 0.25 ? 'sea_rock' : r < 0.75 ? 'kelp_clump' : 'shrub_clump';
+    if (slug === 'shrub_clump' && world.terrain(x, z) < 1.0) continue;
+    await put(slug, x, z, { rot: rnd() * 6, scale: slug === 'sea_rock' ? 0.6 + rnd() * 0.8 : 0.8 + rnd() * 0.5 });
+    if (slug === 'sea_rock') world.solid({ x, z, r: 1.4 });
+  }
+}
+
+// gulls wheel over the places you are going; merged models, banked and bobbed as a whole
+export async function gulls(ctx) {
+  const { put, world, scene } = ctx;
+  const flock = [];
+  const centres = [[-140, 20, 22], [-100, -40, 16], [40, -46, 18], [120, -20, 26], [215, -66, 34]];
+  for (let i = 0; i < 12; i++) {
+    const c = centres[i % centres.length];
+    const o = await put('gull', c[0], c[1], { raw: true });
+    if (!o) return;
+    flock.push({ o, cx: c[0], cz: c[1], y: c[2] + Math.random() * 6, r: 8 + Math.random() * 14, w: (0.25 + Math.random() * 0.2) * (Math.random() < 0.5 ? -1 : 1), a: Math.random() * 6 });
+  }
+  world.tick((dt, t) => {
+    for (const g of flock) {
+      g.a += g.w * dt;
+      const x = g.cx + Math.cos(g.a) * g.r, z = g.cz + Math.sin(g.a) * g.r;
+      g.o.position.set(x, g.y + Math.sin(t * 0.8 + g.a) * 1.2, z);
+      g.o.rotation.set(0, -g.a + (g.w > 0 ? Math.PI : 0), (g.w > 0 ? -1 : 1) * 0.35);
+    }
+  });
 }

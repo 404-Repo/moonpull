@@ -56,7 +56,17 @@ export class FollowCam {
     // pitch first, then arm, to keep the ground and solids out of the lens
     let wantPitch = PITCH + this.extraPitch, wantArm = this.baseArm + this.extraArm;
     for (let i = 0; i < 6 && this.clearance(this.focus.x, this.focus.y, this.focus.z, wantPitch, wantArm) > 0; i++) wantPitch = Math.min(0.96, wantPitch + 0.08);
-    for (let i = 0; i < 8 && this.clearance(this.focus.x, this.focus.y, this.focus.z, wantPitch, wantArm) > 0 && wantArm > 2.5; i++) wantArm = Math.max(2.5, wantArm - 1.0);
+    // still blocked: swing yaw toward the nearest clear side before giving up arm
+    if (this.clearance(this.focus.x, this.focus.y, this.focus.z, wantPitch, wantArm) > 0) {
+      const y0 = this.yaw;
+      for (const off of [0.35, -0.35, 0.7, -0.7, 1.1, -1.1]) {
+        this.yaw = y0 + off;
+        const ok = this.clearance(this.focus.x, this.focus.y, this.focus.z, wantPitch, wantArm) <= 0;
+        this.yaw = y0;
+        if (ok) { this.yaw = y0 + off * Math.min(1, dt * 2.5); break; }
+      }
+    }
+    for (let i = 0; i < 8 && this.clearance(this.focus.x, this.focus.y, this.focus.z, wantPitch, wantArm) > 0 && wantArm > 4.5; i++) wantArm = Math.max(4.5, wantArm - 1.0);
     if (instant) { this.pitch = wantPitch; this.arm = wantArm; }
     else {
       this.pitch += (wantPitch - this.pitch) * (1 - Math.exp(-(wantPitch > this.pitch ? 12 : 2.4) * dt));

@@ -80,6 +80,23 @@ export class World {
     for (const fn of this.tickers) fn(dt, t);
   }
 
+  // the top of whatever solid stands at (x, z), for the camera; thin things are ignored
+  blockerTop(x, z) {
+    let top = -99;
+    for (const s of this.solids) {
+      if (s.off) continue;
+      if (s.r !== undefined) { if (s.r < 0.6) continue; if (Math.hypot(x - s.x, z - s.z) > s.r) continue; }
+      else {
+        const c = Math.cos(-s.rot), sn = Math.sin(-s.rot);
+        const lx = (x - s.x) * c - (z - s.z) * sn, lz = (x - s.x) * sn + (z - s.z) * c;
+        if (Math.abs(lx) > s.hw || Math.abs(lz) > s.hd) continue;
+      }
+      const t = s.y1 !== undefined ? s.y1 : this.terrain(s.x, s.z) + (s.r !== undefined ? 2.5 : 6);
+      if (t > top) top = t;
+    }
+    return top;
+  }
+
   nearestUse(x, z) {
     let best = null, bd = 1e9;
     for (const u of this.uses) {

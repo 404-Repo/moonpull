@@ -49,11 +49,12 @@ export function groundMaterial() {
           vec3 gn = normalize(vec3(hAt(p - vec2(e, 0.0)) - hAt(p + vec2(e, 0.0)), 2.0 * e, hAt(p - vec2(0.0, e)) - hAt(p + vec2(0.0, e))));
           float slope = 1.0 - gn.y;
           float n1 = fb(p * 0.08), n2 = fb(p * 0.6), n3 = vn(p * 3.1);
-          vec3 sand = mix(vec3(0.78, 0.66, 0.49), vec3(0.86, 0.76, 0.58), n1);
+          vec3 sand = mix(vec3(0.70, 0.58, 0.42), vec3(0.79, 0.67, 0.50), n1);
           sand *= 0.92 + 0.12 * n2;
           // ripples on the low sand
           float rip = sin(dot(p, vec2(0.9, 0.35)) * 3.2 + n2 * 4.0) * 0.5 + 0.5;
-          vec3 wetSand = mix(vec3(0.42, 0.36, 0.28), vec3(0.50, 0.43, 0.33), rip * 0.6 + n3 * 0.3);
+          vec3 wetSand = mix(vec3(0.36, 0.31, 0.24), vec3(0.47, 0.40, 0.30), rip * 0.7 + n3 * 0.3);
+          wetSand = mix(wetSand, vec3(0.30, 0.34, 0.33), smoothstep(0.62, 0.8, fb(p * 0.15 + 3.0)) * 0.6);   // standing film of water
           vec3 grass = mix(vec3(0.30, 0.40, 0.17), vec3(0.50, 0.53, 0.24), n1) * (0.82 + 0.3 * n2);
           grass = mix(grass, vec3(0.62, 0.56, 0.34), smoothstep(0.55, 0.8, n2) * 0.5);   // dry tufts
           vec3 rock = mix(vec3(0.44, 0.38, 0.33), vec3(0.66, 0.56, 0.44), n1);
@@ -66,6 +67,15 @@ export function groundMaterial() {
           rock = mix(rock, rock * vec3(0.74, 0.66, 0.6), band * 0.55);
           rock = mix(rock, vec3(0.36, 0.40, 0.22), smoothstep(0.6, 0.85, tri) * smoothstep(0.75, 0.95, gn.y + 0.35) * 0.6);
           vec3 weed = mix(vec3(0.25, 0.29, 0.13), vec3(0.33, 0.33, 0.16), n2);
+          // close-up detail so the ground near the camera is a material, not a gradient
+          float g1 = vn(p * 7.0), g2 = vn(p * 23.0 + 5.0), g3 = h21(floor(p * 9.0));
+          sand *= 0.9 + 0.12 * g1 + 0.08 * g2;
+          sand = mix(sand, vec3(0.92, 0.88, 0.80), step(0.985, g3) * 0.7);                 // shell flecks
+          sand = mix(sand, vec3(0.45, 0.42, 0.38), step(0.975, h21(floor(p * 5.0) + 3.1)) * 0.5); // pebbles
+          float blades = fb(p * 4.0 + vec2(fb(p * 1.3) * 2.0));
+          grass *= 0.8 + 0.28 * blades + 0.1 * g2;
+          grass = mix(grass, grass * vec3(0.62, 0.72, 0.5), smoothstep(0.55, 0.8, fb(p * 0.7)) * 0.6);   // darker clumps
+                    rock *= 0.92 + 0.12 * g2;
           vec3 c = sand;
           c = mix(c, grass, smoothstep(2.4, 3.6, y + n1 * 1.5) * (1.0 - smoothstep(0.35, 0.6, slope)));
           c = mix(c, rock, smoothstep(0.32, 0.55, slope + n2 * 0.15));

@@ -86,3 +86,4 @@ body:not(.touchdev) .act { right: 50%; transform: translateX(50%); bottom: calc(
   #stickzone { height: 70vh; }
   #toast { bottom: 24px; }
 }
+body.clean #hud > * { opacity: 0 !important; }
