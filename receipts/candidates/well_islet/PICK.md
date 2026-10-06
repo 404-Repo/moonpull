@@ -1,0 +1,2 @@
+Picked well_islet_c (2,998 tris): lumpy boulder plinth wider than a wall of random-width dressed stones, upturned curved ridge beam like the reference, separate tiles in staggered rows, gable trusses with knee braces, windlass with rope coil, crank and bucket. It reads from all four sides.
+Losers: well_islet_a had a straight ridge and evenly sized stones that looked machined (3,364 tris, over budget); well_islet_b's extruded tile-row strips merged into flat bands with the tile edges lost, and it was also over budget at 3,592.

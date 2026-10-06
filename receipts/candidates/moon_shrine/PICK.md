@@ -1,0 +1,2 @@
+Winner: moon_shrine_a (2,955 tris, inside the 3,000 prop budget). Block-built steps, carved plinth, red cloth band with rope and shells, and a round torus ring around the 'moonstone' disc under an open tiled gable match the reference; the disc glows from the back too.
+Losers: B (lathe column, extruded sawtooth roof) reads as plank rows rather than tiles and its smooth base loses the chunky blocks; C (masonry drums, sagging roof, voussoir frame) was a close second but came in at 3,092 tris and its octagonal frame is less like the reference's round ring.

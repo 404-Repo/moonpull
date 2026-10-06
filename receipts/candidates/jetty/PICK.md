@@ -1,0 +1,2 @@
+Picked jetty_a (primitives, 2,952 tris): cross planks with gaps and jitter, wet/dry log piles poking above the deck, X braces across and along, a ladder that reads as a ladder, and the rope rail's half-spans end at the sag low point on z = +-4 so copies placed 8 m apart join seamlessly.
+Losers: jetty_b (extruded planks and lathe logs) was nearly identical but its one-piece extruded ladder read as a pale chair-back above the deck; jetty_c laid the boards lengthwise and used K braces, which does not match the reference's cross-plank deck and X bracing.

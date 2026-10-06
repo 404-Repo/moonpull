@@ -1,0 +1,3 @@
+# stilt_house_a: picked C (11,720 tris, verify ok, 6.3 x 8.5 x 7.8 m incl. ladder and eaves)
+C won by eye: its sagging ridge and tile rows, jettied plank gables, front-only deck with ladder and deep projecting casings read closest to the storybook reference from all four sides. A (primitives, 11,672) is a close second, but its ridge is ruler-straight and the deck wraps the right side, which the ref does not. B (extruded profiles, 13,808) blew the budget, its scalloped tile strips read as flat bands rather than individual tiles, and its stilt X-brace panels came out spindly.
+Known weakness: the stilts are round logs where the ref has squared posts, and the gable windows glow warm even in daylight.
